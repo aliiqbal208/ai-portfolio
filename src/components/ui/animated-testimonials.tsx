@@ -1,9 +1,28 @@
 "use client";
 
 import { IconArrowLeft, IconArrowRight } from "@tabler/icons-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useState, forwardRef } from "react";
+import { MotionDiv, MotionPWithMotion } from "@/lib/motion-components";
+
+// Custom motion span component
+type MotionSpanProps = {
+  className?: string;
+  children?: React.ReactNode;
+  initial?: any;
+  animate?: any;
+  transition?: any;
+  key?: any;
+};
+
+const MotionSpan = forwardRef<HTMLSpanElement, MotionSpanProps>(({ className, children, ...props }, ref) => {
+  return <span ref={ref} className={className} {...props}>{children}</span>;
+});
+
+MotionSpan.displayName = 'MotionSpan';
+
+const MotionSpanWithMotion = motion(MotionSpan);
 
 type Testimonial = {
   quote: string;
@@ -49,7 +68,7 @@ export const AnimatedTestimonials = ({
           <div className="relative h-80 w-full">
             <AnimatePresence>
               {testimonials.map((testimonial, index) => (
-                <motion.div
+                <MotionDiv
                   key={testimonial.src}
                   initial={{
                     opacity: 0,
@@ -87,13 +106,13 @@ export const AnimatedTestimonials = ({
                     draggable={false}
                     className="h-full w-full rounded-3xl object-cover object-center"
                   />
-                </motion.div>
+                </MotionDiv>
               ))}
             </AnimatePresence>
           </div>
         </div>
         <div className="flex flex-col justify-between py-4">
-          <motion.div
+          <MotionDiv
             key={active}
             initial={{
               y: 20,
@@ -118,9 +137,9 @@ export const AnimatedTestimonials = ({
             <p className="text-sm text-gray-500 dark:text-neutral-500">
               {testimonials[active].designation}
             </p>
-            <motion.p className="mt-8 text-lg text-gray-500 dark:text-neutral-300">
+            <MotionPWithMotion className="mt-8 text-lg text-gray-500 dark:text-neutral-300">
               {testimonials[active].quote.split(" ").map((word, index) => (
-                <motion.span
+                <MotionSpanWithMotion
                   key={index}
                   initial={{
                     filter: "blur(10px)",
@@ -140,10 +159,10 @@ export const AnimatedTestimonials = ({
                   className="inline-block"
                 >
                   {word}&nbsp;
-                </motion.span>
+                </MotionSpanWithMotion>
               ))}
-            </motion.p>
-          </motion.div>
+            </MotionPWithMotion>
+          </MotionDiv>
           <div className="flex gap-4 pt-12 md:pt-0">
             <button
               onClick={handlePrev}

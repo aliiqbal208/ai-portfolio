@@ -1,7 +1,8 @@
 'use client';
 
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { AnimatePresence } from 'framer-motion';
+import { MotionDiv } from '@/lib/motion-components';
 import Image from 'next/image';
 import { X } from 'lucide-react';
 
@@ -59,7 +60,7 @@ export function Photos({ photos, className = '', title }: PhotosProps) {
         {/* Photos Grid */}
         <div className={`grid ${getGridClasses()} gap-6`}>
           {photos.map((photo, index) => (
-            <motion.div
+            <MotionDiv
               key={index}
               className="relative aspect-square overflow-hidden rounded-2xl cursor-pointer"
               whileHover={{ scale: 1.02 }}
@@ -77,7 +78,7 @@ export function Photos({ photos, className = '', title }: PhotosProps) {
                 
                 {/* Caption overlay (shown on hover) */}
                 {photo.caption && (
-                  <motion.div 
+                  <MotionDiv 
                     initial={{ opacity: 0 }}
                     whileHover={{ opacity: 1 }}
                     className="absolute inset-0 bg-black/30 flex items-end p-4"
@@ -85,10 +86,10 @@ export function Photos({ photos, className = '', title }: PhotosProps) {
                     <p className="text-white text-sm sm:text-base font-medium">
                       {photo.caption}
                     </p>
-                  </motion.div>
+                  </MotionDiv>
                 )}
               </div>
-            </motion.div>
+            </MotionDiv>
           ))}
         </div>
       </div>
@@ -96,14 +97,14 @@ export function Photos({ photos, className = '', title }: PhotosProps) {
       {/* Fullscreen Photo Modal */}
       <AnimatePresence>
         {selectedPhoto && (
-          <motion.div
+          <MotionDiv
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4"
             onClick={closePhoto}
           >
-            <motion.div
+            <MotionDiv
               initial={{ scale: 0.9 }}
               animate={{ scale: 1 }}
               exit={{ scale: 0.9 }}
@@ -134,8 +135,8 @@ export function Photos({ photos, className = '', title }: PhotosProps) {
                   <p className="text-center text-white">{selectedPhoto.caption}</p>
                 </div>
               )}
-            </motion.div>
-          </motion.div>
+            </MotionDiv>
+          </MotionDiv>
         )}
       </AnimatePresence>
     </div>

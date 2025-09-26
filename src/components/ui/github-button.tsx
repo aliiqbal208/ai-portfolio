@@ -4,11 +4,11 @@ import { cn } from '@/lib/utils';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { Star } from 'lucide-react';
 import {
-  motion,
   useInView,
   type SpringOptions,
   type UseInViewOptions,
-} from 'motion/react';
+} from 'framer-motion';
+import { MotionDiv } from '@/lib/motion-components';
 import React, { useCallback, useEffect, useState } from 'react';
 
 const githubButtonVariants = cva(
@@ -144,8 +144,8 @@ function GithubButton({
     animationDelay,
   ]);
 
-  const ref = React.useRef(null);
-  const isInView = useInView(ref, inViewOptions);
+  const ref = React.useRef<HTMLButtonElement>(null);
+  const isInView = useInView(ref as React.RefObject<Element>, inViewOptions);
 
   useEffect(() => {
     if (targetStars === null) return;
@@ -247,7 +247,7 @@ function GithubButton({
           starsClass
         )}
       >
-        <motion.div
+        <MotionDiv
           animate={{ opacity: 1 }}
           transition={{
             type: 'spring',
@@ -258,7 +258,7 @@ function GithubButton({
           className="tabular-nums"
         >
           <span>{currentStars > 0 && formatNumber(currentStars)}</span>
-        </motion.div>
+        </MotionDiv>
         {fixedWidth && (
           <span className="h-0 overflow-hidden tabular-nums opacity-0">
             {targetStars !== null ? formatNumber(targetStars) : ''}

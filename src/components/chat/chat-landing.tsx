@@ -1,8 +1,7 @@
 'use client';
 
-import { motion } from 'framer-motion';
-import { Award, Code, GraduationCap, Mail, MessageSquare } from 'lucide-react';
-import React from 'react';
+import { Award, Code, Mail, MessageSquare } from 'lucide-react';
+import { MotionDiv, MotionButton } from '@/lib/motion-components';
 
 interface ChatLandingProps {
   submitQuery: (query: string) => void;
@@ -54,29 +53,29 @@ const ChatLanding: React.FC<ChatLandingProps> = ({ submitQuery, hasReachedLimit 
   };
 
   return (
-    <motion.div
+    <MotionDiv
       className="flex w-full flex-col items-center px-4 py-6"
       initial="hidden"
       animate="visible"
       variants={containerVariants}
     >
       {/* Welcome message */}
-      <motion.div className="mb-8 text-center" variants={itemVariants}>
+      <MotionDiv className="mb-8 text-center" variants={itemVariants}>
         <h2 className="mb-3 text-2xl font-semibold">
             I'm Muhammad Ali's digital twin
         </h2>
         <p className="text-muted-foreground mx-auto max-w-md">
           The first portfolio that fit YOU needs.
         </p>
-      </motion.div>
+      </MotionDiv>
 
       {/* Suggested questions */}
-      <motion.div
+      <MotionDiv
         className="w-full max-w-md space-y-3"
         variants={containerVariants}
       >
         {suggestedQuestions.map((question, index) => (
-          <motion.button
+          <MotionButton
             key={index}
             className={`flex w-full items-center rounded-lg px-4 py-3 transition-colors ${
               hasReachedLimit 
@@ -93,10 +92,10 @@ const ChatLanding: React.FC<ChatLandingProps> = ({ submitQuery, hasReachedLimit 
               {question.icon}
             </span>
             <span className="text-left">{question.text}</span>
-          </motion.button>
+          </MotionButton>
         ))}
-      </motion.div>
-    </motion.div>
+      </MotionDiv>
+    </MotionDiv>
   );
 };
 

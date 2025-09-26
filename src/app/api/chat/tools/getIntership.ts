@@ -18,8 +18,8 @@ export const getInternship = tool({
 
 📬 **Contact me** via:
 - Email: aliiqbal208@gmail.com
-- LinkedIn: [linkedin.com/in/raphael-giraud](https://www.linkedin.com/in/raphael-giraud-ai/)
-- GitHub: [github.com/raphaelgiraud](https://github.com/toukoum)
+- LinkedIn: [linkedin.com/in/aliiqbal208](https://www.linkedin.com/in/aliiqbal208/)
+- GitHub: [github.com/aliiqbal208](https://github.com/aliiqbal208)
 
 Let's build cool shit together ✌️
     `;

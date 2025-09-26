@@ -2,7 +2,7 @@
 
 import FluidCursor from '@/components/FluidCursor';
 import { Button } from '@/components/ui/button';
-import { motion } from 'framer-motion';
+import { MotionDiv } from '@/lib/motion-components';
 import {
   ArrowRight,
   BriefcaseBusiness,
@@ -91,7 +91,7 @@ export default function Home() {
       </div>
 
       {/* header */}
-      <motion.div
+      <MotionDiv
         className="z-1 mt-24 mb-8 flex flex-col items-center text-center md:mt-4 md:mb-12"
         variants={topElementVariants}
         initial="hidden"
@@ -104,7 +104,7 @@ export default function Home() {
         <h1 className="text-4xl font-bold sm:text-5xl md:text-6xl lg:text-7xl">
           AI Portfolio
         </h1>
-      </motion.div>
+      </MotionDiv>
 
       {/* centre memoji */}
       <div className="relative z-10 h-52 w-48 overflow-hidden sm:h-72 sm:w-72">
@@ -119,7 +119,7 @@ export default function Home() {
       </div>
 
       {/* input + quick buttons */}
-      <motion.div
+      <MotionDiv
         variants={bottomElementVariants}
         initial="hidden"
         animate="visible"
@@ -169,7 +169,7 @@ export default function Home() {
             </Button>
           ))}
         </div>
-      </motion.div>
+      </MotionDiv>
       <FluidCursor />
     </div>
   );

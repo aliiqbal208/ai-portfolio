@@ -6,9 +6,9 @@ import {
 } from '@/components/ui/chat/chat-bubble';
 import { ChatRequestOptions } from 'ai';
 import { Message } from 'ai/react';
-import { motion } from 'framer-motion';
 import ChatMessageContent from './chat-message-content';
 import ToolRenderer from './tool-renderer';
+import { MotionDiv } from '@/lib/motion-components';
 
 interface SimplifiedChatViewProps {
   message: Message;
@@ -59,7 +59,7 @@ export function SimplifiedChatView({
   console.log('currentTool', currentTool);
 
   return (
-    <motion.div {...MOTION_CONFIG} className="flex h-full w-full flex-col px-4">
+    <MotionDiv {...MOTION_CONFIG} className="flex h-full w-full flex-col px-4">
       {/* Single scrollable container for both tool and text content */}
       <div className="custom-scrollbar flex h-full w-full flex-col overflow-y-auto">
         {/* Tool invocation result - displayed at the top */}
@@ -93,6 +93,6 @@ export function SimplifiedChatView({
         {/* Add some padding at the bottom for better scrolling experience */}
         <div className="pb-4"></div>
       </div>
-    </motion.div>
+    </MotionDiv>
   );
 }

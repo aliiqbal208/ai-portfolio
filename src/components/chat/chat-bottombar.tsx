@@ -2,10 +2,9 @@
 'use client';
 
 import { ChatRequestOptions } from 'ai';
-import { motion } from 'framer-motion';
-import { ArrowRight, ArrowUp } from 'lucide-react';
-import React, { useEffect, useState } from 'react';
-import { FastfolioTracking } from '@/lib/fastfolio-tracking';
+import { ArrowUp } from 'lucide-react';
+import React, { useEffect } from 'react';
+import { MotionDiv } from '@/lib/motion-components';
 
 interface ChatBottombarProps {
   handleInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -30,12 +29,7 @@ export default function ChatBottombar({
   disabled = false,
 }: ChatBottombarProps) {
   const inputRef = React.useRef<HTMLInputElement>(null);
-  const [remainingMessages, setRemainingMessages] = useState(0);
   
-  useEffect(() => {
-    // Update remaining messages count
-    setRemainingMessages(FastfolioTracking.getRemainingMessages());
-  }, [input]); // Update when input changes (user is typing)
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (
@@ -56,7 +50,7 @@ export default function ChatBottombar({
   }, [inputRef]);
 
   return (
-    <motion.div
+    <MotionDiv
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       className="w-full pb-2 md:pb-5"
@@ -93,6 +87,6 @@ export default function ChatBottombar({
           </button>
         </div>
       </form>
-    </motion.div>
+    </MotionDiv>
   );
 }

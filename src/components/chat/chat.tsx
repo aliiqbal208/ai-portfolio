@@ -1,6 +1,7 @@
 'use client';
 import { useChat } from '@ai-sdk/react';
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence } from 'framer-motion';
+import { MotionDiv } from '@/lib/motion-components';
 import dynamic from 'next/dynamic';
 import { useSearchParams } from 'next/navigation';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
@@ -15,7 +16,6 @@ import {
   ChatBubble,
   ChatBubbleMessage,
 } from '@/components/ui/chat/chat-bubble';
-import { Info } from 'lucide-react';
 import HelperBoost from './HelperBoost';
 import { PoweredByFastfolio } from '@/components/powered-by-fastfolio';
 import { FastfolioTracking } from '@/lib/fastfolio-tracking';
@@ -46,7 +46,7 @@ interface AvatarProps {
 // Dynamic import of Avatar component
 const Avatar = dynamic<AvatarProps>(
   () =>
-    Promise.resolve(({ hasActiveTool, videoRef, isTalking }: AvatarProps) => {
+    Promise.resolve(({ hasActiveTool, videoRef, isTalking: _isTalking }: AvatarProps) => {
       // This function will only execute on the client
       const isIOS = () => {
         // Multiple detection methods
@@ -132,10 +132,8 @@ const Chat = () => {
     messages,
     input,
     handleInputChange,
-    handleSubmit,
     isLoading,
     stop,
-    setMessages,
     setInput,
     reload,
     addToolResult,
@@ -347,7 +345,7 @@ const Chat = () => {
 
           <AnimatePresence>
             {latestUserMessage && !currentAIMessage && (
-              <motion.div
+              <MotionDiv
                 {...MOTION_CONFIG}
                 className="mx-auto flex max-w-3xl px-4"
               >
@@ -361,7 +359,7 @@ const Chat = () => {
                     />
                   </ChatBubbleMessage>
                 </ChatBubble>
-              </motion.div>
+              </MotionDiv>
             )}
           </AnimatePresence>
         </div>
@@ -376,13 +374,13 @@ const Chat = () => {
         >
           <AnimatePresence mode="wait">
             {isEmptyState ? (
-              <motion.div
+              <MotionDiv
                 key="landing"
                 className="flex min-h-full items-center justify-center"
                 {...MOTION_CONFIG}
               >
                 <ChatLanding submitQuery={submitQuery} hasReachedLimit={hasReachedLimit} />
-              </motion.div>
+              </MotionDiv>
             ) : currentAIMessage ? (
               <div className="pb-4">
                 <SimplifiedChatView
@@ -394,7 +392,7 @@ const Chat = () => {
               </div>
             ) : (
               loadingSubmit && (
-                <motion.div
+                <MotionDiv
                   key="loading"
                   {...MOTION_CONFIG}
                   className="px-4 pt-18"
@@ -402,7 +400,7 @@ const Chat = () => {
                   <ChatBubble variant="received">
                     <ChatBubbleMessage isLoading />
                   </ChatBubble>
-                </motion.div>
+                </MotionDiv>
               )
             )}
           </AnimatePresence>
@@ -411,7 +409,7 @@ const Chat = () => {
         {/* Fixed Bottom Bar */}
         <div className="sticky bottom-0 bg-white px-2 pt-3 md:px-0 md:pb-4">
           <div className="relative flex flex-col items-center gap-3">
-            <HelperBoost submitQuery={submitQuery} setInput={setInput} hasReachedLimit={hasReachedLimit} />
+            <HelperBoost submitQuery={submitQuery} hasReachedLimit={hasReachedLimit} />
             <ChatBottombar
               input={hasReachedLimit ? "You've reached your message limit. Create your own Fastfolio to continue chatting!" : input}
               handleInputChange={hasReachedLimit ? () => {} : handleInputChange}

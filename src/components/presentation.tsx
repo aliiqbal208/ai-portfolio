@@ -1,15 +1,14 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { MotionDiv, MotionPWithMotion } from '@/lib/motion-components';
 import Image from 'next/image';
-import React from 'react';
 
 export function Presentation() {
   // Personal information
   const profile = {
-    name: 'Raphael Giraud',
-    age: '21 years old',
-    location: 'Paris, France',
+    name: 'Muhammad Ali',
+    headline: 'Tech Enthusiast',
+    location: 'Lahore, Pakistan',
     // Add a newline character after the emoji
     description: "Hey 👋\n\nI'm Muhammad Ali, a Senior Software Engineer. I specialize in architecting scalable systems and user-centric platforms. With expertise in modern frameworks, cloud (AWS/GCP), and high-performance systems, I'm passionate about solving complex challenges and driving impactful innovation.",
 
@@ -48,7 +47,7 @@ export function Presentation() {
         {/* Image section */}
         <div className="relative mx-auto aspect-square w-full max-w-sm">
           <div className="relative h-full w-full overflow-hidden rounded-2xl">
-            <motion.div
+            <MotionDiv
               initial={{ scale: 0.92, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ duration: 0.8, ease: [0.19, 1, 0.22, 1] }}
@@ -66,13 +65,13 @@ export function Presentation() {
                   target.src = profile.fallbackSrc;
                 }}
               />
-            </motion.div>
+            </MotionDiv>
           </div>
         </div>
 
         {/* Text content section */}
         <div className="flex flex-col space-y">
-          <motion.div
+          <MotionDiv
             initial="hidden"
             animate="visible"
             variants={textVariants}
@@ -81,23 +80,23 @@ export function Presentation() {
               {profile.name}
             </h1>
             <div className="mt-1 flex flex-col gap-1 md:flex-row md:items-center md:gap-4">
-              <p className="text-muted-foreground">{profile.age}</p>
+              <p className="text-muted-foreground">{profile.headline}</p>
               <div className="bg-border hidden h-1.5 w-1.5 rounded-full md:block" />
               <p className="text-muted-foreground">{profile.location}</p>
             </div>
-          </motion.div>
+          </MotionDiv>
 
-          <motion.p
+          <MotionPWithMotion
             initial="hidden"
             animate="visible"
             variants={paragraphAnimation}
             className="text-foreground mt-6 leading-relaxed whitespace-pre-line"
           >
             {profile.description}
-          </motion.p>
+          </MotionPWithMotion>
 
           {/* Tags/Keywords */}
-          <motion.div
+          <MotionDiv
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.6, duration: 0.5 }}
@@ -113,7 +112,7 @@ export function Presentation() {
                 </span>
               )
             )}
-          </motion.div>
+          </MotionDiv>
         </div>
       </div>
     </div>

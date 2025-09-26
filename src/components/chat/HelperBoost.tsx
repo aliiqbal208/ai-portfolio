@@ -7,7 +7,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@radix-ui/react-tooltip';
-import { motion } from 'framer-motion';
+import { MotionDiv, MotionButton } from '@/lib/motion-components';
 import {
   BriefcaseBusiness,
   BriefcaseIcon,
@@ -30,7 +30,6 @@ import { Drawer } from 'vaul';
 
 interface HelperBoostProps {
   submitQuery?: (query: string) => void;
-  setInput?: (value: string) => void;
   hasReachedLimit?: boolean;
 }
 
@@ -127,7 +126,7 @@ const questionsByCategory = [
 // Animated Chevron component
 const AnimatedChevron = () => {
   return (
-    <motion.div
+    <MotionDiv
       animate={{
         y: [0, -4, 0], // Subtle up and down motion
       }}
@@ -140,13 +139,12 @@ const AnimatedChevron = () => {
       className="text-primary mb-1.5"
     >
       <ChevronUp size={16} />
-    </motion.div>
+    </MotionDiv>
   );
 };
 
 export default function HelperBoost({
   submitQuery,
-  setInput,
   hasReachedLimit = false,
 }: HelperBoostProps) {
   const [isVisible, setIsVisible] = useState(true);
@@ -230,7 +228,7 @@ export default function HelperBoost({
                   <Tooltip delayDuration={0}>
                     <TooltipTrigger asChild>
                       <Drawer.Trigger className="group relative flex flex-shrink-0 items-center justify-center" disabled={hasReachedLimit}>
-                        <motion.div
+                        <MotionDiv
                           className={`flex h-auto items-center space-x-1 rounded-xl border px-4 py-3 text-sm backdrop-blur-sm transition-all duration-200 ${
                             hasReachedLimit 
                               ? 'cursor-not-allowed border-gray-200 bg-gray-100 opacity-50' 
@@ -247,7 +245,7 @@ export default function HelperBoost({
                             />
                             {/*<span className="text-sm font-medium">More</span>*/}
                           </div>
-                        </motion.div>
+                        </MotionDiv>
                       </Drawer.Trigger>
                     </TooltipTrigger>
                     <TooltipContent>
@@ -342,7 +340,7 @@ function QuestionItem({ question, onClick, isSpecial }: QuestionItemProps) {
   const [isHovered, setIsHovered] = useState(false);
 
   return (
-    <motion.button
+    <MotionButton
       className={cn(
         'flex w-full items-center justify-between rounded-[10px]',
         'text-md px-6 py-4 text-left font-normal',
@@ -367,7 +365,7 @@ function QuestionItem({ question, onClick, isSpecial }: QuestionItemProps) {
           {question}
         </span>
       </div>
-      <motion.div
+      <MotionDiv
         animate={{ x: isHovered ? 4 : 0 }}
         transition={{
           type: 'spring',
@@ -381,7 +379,7 @@ function QuestionItem({ question, onClick, isSpecial }: QuestionItemProps) {
             isSpecial ? 'text-white' : 'text-primary'
           )}
         />
-      </motion.div>
-    </motion.button>
+      </MotionDiv>
+    </MotionButton>
   );
 }

@@ -2,8 +2,8 @@
 
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { motion } from 'framer-motion';
 import { Code, Cpu, PenTool, Users } from 'lucide-react';
+import { MotionDiv } from '@/lib/motion-components';
 
 const Skills = () => {
   const skillsData = [
@@ -110,7 +110,7 @@ const Skills = () => {
   };
 
   return (
-    <motion.div
+    <MotionDiv
       initial={{ scale: 0.98, opacity: 0 }}
       animate={{ scale: 1, opacity: 1 }}
       transition={{ duration: 0.6, ease: [0.19, 1, 0.22, 1] }}
@@ -124,14 +124,14 @@ const Skills = () => {
         </CardHeader>
 
         <CardContent className="px-0">
-          <motion.div
+          <MotionDiv
             className="space-y-8 px-0"
             variants={containerVariants}
             initial="hidden"
             animate="visible"
           >
             {skillsData.map((section, index) => (
-              <motion.div
+              <MotionDiv
                 key={index}
                 className="space-y-3 px-0"
                 variants={itemVariants}
@@ -143,14 +143,14 @@ const Skills = () => {
                   </h3>
                 </div>
 
-                <motion.div
+                <MotionDiv
                   className="flex flex-wrap gap-2"
                   variants={containerVariants}
                   initial="hidden"
                   animate="visible"
                 >
                   {section.skills.map((skill, idx) => (
-                    <motion.div
+                    <MotionDiv
                       key={idx}
                       variants={badgeVariants}
                       whileHover={{
@@ -161,15 +161,15 @@ const Skills = () => {
                       <Badge className={`border px-3 py-1.5 font-normal`}>
                         {skill}
                       </Badge>
-                    </motion.div>
+                    </MotionDiv>
                   ))}
-                </motion.div>
-              </motion.div>
+                </MotionDiv>
+              </MotionDiv>
             ))}
-          </motion.div>
+          </MotionDiv>
         </CardContent>
       </Card>
-    </motion.div>
+    </MotionDiv>
   );
 };
 

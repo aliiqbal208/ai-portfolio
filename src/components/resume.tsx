@@ -1,9 +1,7 @@
 'use client';
 
-import React from 'react';
-import { motion } from 'framer-motion';
-import { ArrowDownToLine, Download, Eye, File } from 'lucide-react';
-import Image from 'next/image';
+import { Download } from 'lucide-react';
+import { MotionDiv } from '@/lib/motion-components';
 
 export function Resume() {
   // Resume details
@@ -29,7 +27,7 @@ export function Resume() {
 
   return (
     <div className="mx-auto w-full py-8 font-sans">
-      <motion.div
+      <MotionDiv
         onClick={handleDownload}
         className="group relative cursor-pointer overflow-hidden rounded-xl bg-accent p-0 transition-all duration-300"
         initial={{ opacity: 0, y: 20 }}
@@ -57,15 +55,15 @@ export function Resume() {
             </div>
 
             {/* Download indicator */}
-            <motion.div
+            <MotionDiv
               className="flex h-10 w-10 items-center justify-center rounded-full bg-black text-primary-foreground group-hover:bg-black/80"
               initial={{ scale: 1 }}
             >
               <Download className="h-5 w-5" />
-            </motion.div>
+            </MotionDiv>
           </div>
         </div>
-      </motion.div>
+      </MotionDiv>
     </div>
   );
 }

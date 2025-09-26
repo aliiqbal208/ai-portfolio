@@ -1,7 +1,5 @@
 'use client';
 
-import React from 'react';
-import { motion } from 'framer-motion';
 import { ChevronRight } from 'lucide-react';
 
 export function Contact() {
@@ -9,31 +7,27 @@ export function Contact() {
   const contactInfo = {
     name: 'Muhammad Ali',
     email: 'aliiqbal208@gmail.com',
-    handle: '@Raphael.Giraud',
+    handle: '@aliiqbal208',
     socials: [
       {
         name: 'LinkedIn',
-        url: 'https://www.linkedin.com/in/raphael-giraud-60939519a/',
-      },
-      {
-        name: 'Youtube',
-        url: 'https://www.youtube.com/@toukoum',
+        url: 'https://www.linkedin.com/in/aliiqbal208/',
       },
       {
         name: 'Instagram',
-        url: 'https://www.instagram.com/raphael.giraud/',
+        url: 'https://www.instagram.com/aliiqbal208/',
       },
       {
         name: 'Discord',
-        url: 'https://discord.com/users/toukoum',
+        url: 'https://discord.com/users/aliiqbal208',
       },
       {
         name: 'Github',
-        url: 'https://github.com/toukoum',
+        url: 'https://github.com/aliiqbal208',
       },
       {
         name: 'X',
-        url: 'https://x.com/toukoumcode',
+        url: 'https://x.com/aliiqbal208',
       },
     ],
   };

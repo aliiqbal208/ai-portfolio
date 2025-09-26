@@ -8,10 +8,9 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { motion } from 'framer-motion';
+import { MotionDiv } from '@/lib/motion-components';
 import { X } from 'lucide-react';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation'; // Importation correcte pour Next.js 13+
 import { useState } from 'react';
 
 // Added a trigger prop to accept custom triggers
@@ -21,7 +20,6 @@ interface WelcomeModalProps {
 
 export default function WelcomeModal({ trigger }: WelcomeModalProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const router = useRouter(); // Initialisation du router avec useRouter
 
   // Default trigger is the logo
   const defaultTrigger = (
@@ -59,7 +57,7 @@ export default function WelcomeModal({ trigger }: WelcomeModalProps) {
 
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogContent className="bg-background z-52 max-h-[85vh] overflow-auto rounded-2xl border-none p-4 py-6 shadow-xl sm:max-w-[85vw] md:max-w-[80vw] lg:max-w-[1000px]">
-          <motion.div
+          <MotionDiv
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3 }}
@@ -141,7 +139,7 @@ export default function WelcomeModal({ trigger }: WelcomeModalProps) {
                 </div>
               </div>
             </div>
-          </motion.div>
+          </MotionDiv>
         </DialogContent>
       </Dialog>
     </>

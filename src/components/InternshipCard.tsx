@@ -1,17 +1,15 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { MotionDiv } from '@/lib/motion-components';
 import { CalendarDays, Code2, Globe } from 'lucide-react';
-import { useRouter } from 'next/navigation';
 
 const InternshipCard = () => {
   const openMail = () => {
-    window.open('mailto:raphaelgiraud12@gmail.com', '_blank');
+    window.open('mailto:aliiqbal208@gmail.com', '_blank');
   };
-  const router = useRouter();
 
   return (
-    <motion.div
+    <MotionDiv
       initial={{ opacity: 0, y: 40 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
@@ -24,13 +22,13 @@ const InternshipCard = () => {
           <div className="bg-muted h-16 w-16 overflow-hidden rounded-full shadow-md">
             <img
               src="/avatar-raphael.jpg"
-              alt="Raphael's avatar"
+              alt="Muhammad Ali's avatar"
               className="h-full w-full object-cover"
             />
           </div>
           <div>
             <h2 className="text-foreground text-2xl font-semibold">
-              Raphael Giraud
+              Muhammad Ali
             </h2>
             <p className="text-muted-foreground text-sm">
               Intership Application
@@ -134,7 +132,7 @@ const InternshipCard = () => {
           Contact me
         </button>
       </div>
-    </motion.div>
+    </MotionDiv>
   );
 };
 

@@ -1,5 +1,5 @@
-export async function GET(req: Request) {
-  const res = await fetch('https://api.github.com/repos/toukoum/portfolio', {
+export async function GET(_req: Request) {
+  const res = await fetch('https://api.github.com/repos/aliiqbal208/ai-portfolio', {
     headers: {
       Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
     },
@@ -10,5 +10,7 @@ export async function GET(req: Request) {
   }
 
   const data = await res.json();
-  return Response.json({ stars: data.stargazers_count });
+  return new Response(JSON.stringify({ stars: data.stargazers_count }), {
+    headers: { 'Content-Type': 'application/json' },
+  });
 }

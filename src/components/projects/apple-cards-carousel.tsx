@@ -6,7 +6,8 @@ import {
   IconArrowNarrowRight,
   IconX,
 } from '@tabler/icons-react';
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence } from 'framer-motion';
+import { MotionDiv, MotionPWithMotion, MotionButton } from '@/lib/motion-components';
 import Image, { ImageProps } from 'next/image';
 import React, {
   createContext,
@@ -128,7 +129,7 @@ export const Carousel = ({
             )}
           >
             {items.map((item, index) => (
-              <motion.div
+              <MotionDiv
                 initial={{
                   opacity: 0,
                   y: 20,
@@ -147,7 +148,7 @@ export const Carousel = ({
                 className="rounded-3xl last:pr-[5%] md:last:pr-[33%]"
               >
                 {item}
-              </motion.div>
+              </MotionDiv>
             ))}
           </div>
         </div>
@@ -183,7 +184,7 @@ export const Card = ({
 }) => {
   const [open, setOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
-  const { onCardClose, currentIndex } = useContext(CarouselContext);
+  const { onCardClose } = useContext(CarouselContext);
 
   useEffect(() => {
     function onKeyDown(event: KeyboardEvent) {
@@ -219,13 +220,13 @@ export const Card = ({
       <AnimatePresence>
         {open && (
           <div className="fixed inset-0 z-52 h-screen overflow-auto">
-            <motion.div
+            <MotionDiv
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               className="fixed inset-0 h-full w-full bg-black/80 backdrop-blur-lg"
             />
-            <motion.div
+            <MotionDiv
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -246,28 +247,28 @@ export const Card = ({
               {/* Header section with consistent padding */}
               <div className="relative px-8 pt-2 pb-0 md:px-14">
                 <div>
-                  <motion.p
+                  <MotionPWithMotion
                     layoutId={layout ? `category-${card.title}` : undefined}
                     className="text-base font-medium text-black dark:text-white"
                   >
                     {card.category}
-                  </motion.p>
-                  <motion.p
+                  </MotionPWithMotion>
+                  <MotionPWithMotion
                     layoutId={layout ? `title-${card.title}` : undefined}
                     className="mt-4 text-2xl font-semibold text-neutral-700 md:text-5xl dark:text-white"
                   >
                     {card.title}
-                  </motion.p>
+                  </MotionPWithMotion>
                 </div>
               </div>
 
               {/* Content with consistent padding */}
               <div className="px-8 pt-8 pb-14 md:px-14">{card.content}</div>
-            </motion.div>
+            </MotionDiv>
           </div>
         )}
       </AnimatePresence>
-      <motion.button
+      <MotionButton
         layoutId={layout ? `card-${card.title}` : undefined}
         onClick={handleOpen}
         className="relative z-10 flex h-80 w-56 flex-col items-start justify-start overflow-hidden rounded-3xl bg-gray-100 dark:bg-neutral-900"
@@ -275,18 +276,18 @@ export const Card = ({
         <div className="absolute inset-x-0 top-0 z-30 h-full cursor-pointer bg-gradient-to-b from-black hover:scale-110 via-transparent to-transparent" />
         {/*<div className="absolute inset-0 z-20 cursor-pointer bg-black/20 hover:bg-black/2" />*/}
         <div className="relative z-40 p-8">
-          <motion.p
+          <MotionPWithMotion
             layoutId={layout ? `category-${card.category}` : undefined}
             className="text-left font-sans text-sm font-medium text-white md:text-base"
           >
             {card.category}
-          </motion.p>
-          <motion.p
+          </MotionPWithMotion>
+          <MotionPWithMotion
             layoutId={layout ? `title-${card.title}` : undefined}
             className="max-w-xs text-left font-sans text-xl font-semibold [text-wrap:balance] text-white md:text-3xl"
           >
             {card.title}
-          </motion.p>
+          </MotionPWithMotion>
         </div>
         <BlurImage
           src={card.src}
@@ -294,7 +295,7 @@ export const Card = ({
           fill
           className="absolute inset-0 z-10 object-cover"
         />
-      </motion.button>
+      </MotionButton>
     </>
   );
 };
