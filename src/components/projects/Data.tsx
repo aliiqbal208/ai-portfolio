@@ -411,7 +411,7 @@ const ProjectContent = ({ project }: { project: ProjectProps }) => {
 // Main data export with updated content
 export const data = [
   {
-    category: 'Startup Project',
+    category: 'Arthur Web App',
     title: 'Synto',
     src: '/syntopreview.png',
     content: <ProjectContent project={{ title: 'Synto' }} />,

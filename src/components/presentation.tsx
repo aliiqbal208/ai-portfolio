@@ -10,7 +10,8 @@ export function Presentation() {
     headline: 'Tech Enthusiast',
     location: 'Lahore, Pakistan',
     // Add a newline character after the emoji
-    description: "Hey 👋\n\nI'm Muhammad Ali, a Senior Software Engineer. I specialize in architecting scalable systems and user-centric platforms. With expertise in modern frameworks, cloud (AWS/GCP), and high-performance systems, I'm passionate about solving complex challenges and driving impactful innovation.",
+    description:
+      "Hey 👋\n\nI'm Muhammad Ali, a Senior Software Engineer. I specialize in architecting scalable systems and user-centric platforms. With expertise in modern frameworks, cloud (AWS/GCP), and high-performance systems, I'm passionate about solving complex challenges and driving impactful innovation.",
 
     src: '/profil-ali.png',
     fallbackSrc:
@@ -70,12 +71,8 @@ export function Presentation() {
         </div>
 
         {/* Text content section */}
-        <div className="flex flex-col space-y">
-          <MotionDiv
-            initial="hidden"
-            animate="visible"
-            variants={textVariants}
-          >
+        <div className="space-y flex flex-col">
+          <MotionDiv initial="hidden" animate="visible" variants={textVariants}>
             <h1 className="from-foreground to-muted-foreground bg-gradient-to-r bg-clip-text text-xl font-semibold text-transparent md:text-3xl">
               {profile.name}
             </h1>
@@ -102,16 +99,26 @@ export function Presentation() {
             transition={{ delay: 0.6, duration: 0.5 }}
             className="mt-4 flex flex-wrap gap-2"
           >
-            {['AI', 'Developer', '42 Paris', 'Sport', 'SaaS Builder'].map(
-              (tag) => (
-                <span
-                  key={tag}
-                  className="bg-secondary text-secondary-foreground rounded-full px-3 py-1 text-sm"
-                >
-                  {tag}
-                </span>
-              )
-            )}
+            {[
+              'Tech Lead',
+              'Full Stack Developer',
+              'AI/ML',
+              'React/Next.js',
+              'TypeScript',
+              'Node.js',
+              'Python',
+              'Golang',
+              'RAG Pipelines',
+              'AWS/GCP',
+              'Scalable Systems',
+            ].map((tag) => (
+              <span
+                key={tag}
+                className="bg-secondary text-secondary-foreground rounded-full px-3 py-1 text-sm"
+              >
+                {tag}
+              </span>
+            ))}
           </MotionDiv>
         </div>
       </div>

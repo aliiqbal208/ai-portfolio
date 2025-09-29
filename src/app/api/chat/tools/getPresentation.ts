@@ -8,7 +8,7 @@ export const getPresentation = tool({
   execute: async () => {
     return {
       presentation:
-        "I'm Muhammad Ali, a 21-year-old developer specializing in AI at 42 Paris. Formerly a high-level mountain biker, I now intern at LightOn AI in Paris. I'm passionate about AI, tech, Entrepreneurship and SaaS tech.",
+        "I'm Muhammad Ali, a Senior Software Engineer specializing in architecting scalable systems and AI‑driven solutions. I lead teams to deliver production‑ready platforms that boost efficiency and user engagement, working across modern web frameworks with Node.js, Python and Go, and cloud platforms like AWS and GCP. Recently at Arthur, I've built real‑time speech pipelines, chatbots and high‑throughput APIs (99.99% uptime), and previously shipped ERP and multi‑tenant web platforms; I hold a BS in Computer Science from the University of Lahore.",
     };
   },
 });
