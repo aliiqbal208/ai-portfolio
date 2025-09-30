@@ -5,306 +5,105 @@ import { Separator } from '@/components/ui/separator';
 // Enhanced project content array with all projects
 const PROJECT_CONTENT = [
   {
-    title: 'Synto',
+    title: 'Arthur Web App',
     description:
-      'Synto is an AI-powered interface that transforms complex blockchain interactions into simple, natural language commands. Whether you want to send tokens, stake assets, swap coins, or even create NFTs or liquidity pools, just tell Synto what to do — no manual wallet interactions, no technical jargon. One of my biggest projects yet',
+      'Cloud-agnostic PWA React app for Arthur VR with org/team/user management, RBAC, onboarding flows, real-time AV and 3D/WebGL, built as a scalable monorepo deployed on AWS and GCP.',
     techStack: [
-      'Next.js',
-      'TailwindCSS',
-      'Web3.js',
-      'shadcn-ui',
       'TypeScript',
-      'Phantom Wallet',
-      'OpenAI API',
-      'Vercel AI SDK',
-      'Solana Agent kit',
-      'Neon',
-      'Prisma'
+      'React',
+      'Redux',
+      'TailwindCSS',
+      'TanStack React Query',
+      'i18next',
+      'Monorepo (Lerna + Yarn Workspaces)',
+      'Webpack',
+      'Jest',
+      'Cypress',
+      'Agora RTC',
+      'WebGL/Unity',
+      'Three.js',
+      'Stripe payments',
+      'AWS',
+      'GCP',
+      'PWA',
     ],
     date: '2025',
     links: [
       {
-        name: 'website',
-        url: 'https://synto.fun',
-      },
-      {
-        name: 'Launch Video',
-        url: 'https://www.youtube.com/watch?v=4QUE2KgKDUw',
-      },
-      {
-        name: 'X',
-        url: 'https://x.com/chainSynto',
-      },
-      {
-        name: 'Technical Video',
-        url: 'https://www.youtube.com/watch?v=1CjBLKPUwtA&feature=youtu.be',
-      },
-      {
-        name: 'Pitch Deck',
-        url: 'https://drive.google.com/file/d/1B3m44mEgv81rJHfjNfTKi147yX4raQed/view?usp=sharing',
-      },
-      {
-        name: 'Usage tutorial',
-        url: 'https://www.youtube.com/watch?v=PRu1cfvT2bA',
-      }
-    ],
-    images: [
-      {
-        src: '/synto1.png',
-        alt: 'Synto landing page',
-      },
-      {
-        src: '/synto2.png',
-        alt: 'Synto chat interface',
-      },
-      {
-        src: '/synto3.png',
-        alt: 'Synto chat interface',
-      },
-      {
-        src: '/synto4.png',
-        alt: 'Synto chat interface',
-      },
-      {
-        src: '/synto5.png',
-        alt: 'Synto chat interface',
-      },
-      {
-        src: '/synto6.png',
-        alt: 'Synto chat interface',
-      },
-    ],
-  },
-  {
-    title: 'Rrate',
-    description:
-      "Rrate is a fun website to allow user to compare his salary with the richest people in the world. Try it now it's online!",
-    techStack: ['Html', 'Css', 'Javascript'],
-    date: '2024',
-    links: [
-      {
-        name: 'website',
-        url: 'https://rrate.app',
-      },
-      {
-        name: 'github',
-        url: 'https://github.com/toukoum/Rrate',
+        name: 'App Link',
+        url: 'https://portal.arthur.digital/login',
       },
     ],
     images: [
       {
-        src: '/rrate1.png',
-        alt: 'Rrate landing page',
+        src: '/arthur-room.png',
+        alt: 'Arthur Room page',
       },
       {
-        src: '/rrate2.png',
-        alt: 'Rrate comparison page',
+        src: '/room-joining.png',
+        alt: 'Room Joining page',
       },
       {
-        src: '/rrate3.png',
-        alt: 'Rrate comparison page',
+        src: '/room-overview.png',
+        alt: 'Room Overview page',
       },
     ],
   },
   {
-    title: 'Defai',
+    title: 'Remar VT',
     description:
-      "We Win ETHOXford hackathon by building DEFAI. DEFAI stands for Decentralized Finance Artificial Intelligence. It's an AI-powered chat interface that simplifies on-chain operations on the Avalanche blockchain by allowing users to interact using natural language. This makes complex DeFi operations accessible even for those with limited technical expertise.",
+      'Developed ReMar VT, a SaaS e-learning platform for nursing education delivering interactive video training. Built with React, TypeScript, Redux, and Material-UI in a monorepo architecture supporting students, admins, and institutions. Integrated Stripe for payments, role-based access, and real-time notifications. My role covered frontend development, state management, and subscription workflows, delivering a scalable, enterprise-grade LMS for healthcare professionals with secure auth, responsive design, seamless user experience, and comprehensive testing for reliability.',
     techStack: [
-      'Next.js',
-      'TailwindCSS',
-      'shadcn-ui',
-      'Vercel AI SDK',
-      'TypeScript',
+      'React',
+      'Typescript',
+      'Javascript',
+      'Redux',
+      'Material-UI',
+      'Stripe',
     ],
-    date: '2025',
-    links: [
-      {
-        name: 'website',
-        url: 'https://dorahacks.io/buidl/22605',
-      },
-      {
-        name: 'github',
-        url: 'https://github.com/toukoum/DEFAI',
-      },
-      {
-        name: 'LinkedIn',
-        url: 'https://www.linkedin.com/feed/update/urn:li:activity:7299337190151483392/',
-      },
-      {
-        name: 'Youtube Video',
-        url: 'https://www.youtube.com/watch?v=N9O7los4-ng&t=34s&ab_channel=Toukoum',
-      }
-    ],
-    images: [
-      {
-        src: '/defai1.png',
-        alt: 'Landing Page of Defai',
-      },
-      {
-        src: '/defai2.png',
-        alt: 'Confirmation popup of Defai',
-      },
-      {
-        src: '/defai3.png',
-        alt: 'Chatbot of Defai',
-      },
-      {
-        src: '/defai4.jpeg',
-        alt: 'Winner team',
-      },
-    ],
-  },
-  {
-    title: 'Fitgear',
-    description:
-      'Won the Gotta Go Hack IA by building Fitgear, a virtual voice seller accessible by QR code to improve the ratio between customers and sellers. Created an AI pipeline with API calls and a RAG system for natural language interactions.',
-    techStack: ['Next.js', 'TailwindCSS', 'OpenAI API', 'Langchain'],
-    date: '2024',
-    links: [
-      {
-        name: 'Linkedin',
-        url: 'https://www.linkedin.com/posts/raphael-giraud-60939519a_hackathon-innovation-sporttech-activity-7210399263774674946-qSXq?utm_source=social_share_send&utm_medium=member_desktop_web&rcm=ACoAAC6vwikBVSEkS7XWktWS7y6GR3GHwAlKslc',
-      },
-    ],
-    images: [
-      {
-        src: '/fitgear2.png',
-        alt: 'Fitgear chatbot',
-      },
-      {
-        src: '/fitgear1.png',
-        alt: 'Fitgear landing page',
-      },
-    ],
-  },
-  {
-    title: 'Datai',
-    description:
-      "DATAI is an AI-powered agent that lets non-technical users query a database using natural language without writing SQL. Built using Next.js, TailwindCSS, shadcn-ui, and Anthropic's Claude API, this project focuses on simplicity, speed, and user-friendly design.",
-    techStack: [
-      'Next.js',
-      'TailwindCSS',
-      'shadcn-ui',
-      'Claude API',
-      'TypeScript',
-    ],
-    date: '2024',
-    links: [
-      {
-        name: 'GitHub',
-        url: 'https://github.com/toukoum/datai',
-      },
-      {
-        name: 'Youtube Video Demo',
-        url: 'https://youtu.be/iE0RXjdbQsw',
-      }
-    ],
-    images: [
-      {
-        src: '/datai1.png',
-        alt: 'Datai landing page',
-      },
-      {
-        src: '/datai2.png',
-        alt: 'Datai chatbot',
-      },
-      {
-        src: '/datai3.png',
-        alt: 'Datai chatbot',
-      },
-      {
-        src: '/datai4.png',
-        alt: 'Datai chatbot',
-      }
-    ],
-  },
-  {
-    title: '3d Pong Game',
-    description:
-      "Transcendance is the final project of my 42 cursus. It's a 3D pong game with multiplayer capabilities, user authentication, and real-time gameplay. We had to do everything from scratch, so it was pretty challenging and we learned a lot.",
-    techStack: ['Django', 'Python', 'JavaScript', 'Websockets', 'PostgreSQL', 'Docker', 'Nginx', 'Web3', 'Solidity'],
     date: '2023',
     links: [
       {
-        name: 'GitHub',
-        url: 'https://github.com/toukoum/Transcendance',
+        name: 'App URL',
+        url: 'https://vt.remarnurse.com/',
       },
     ],
     images: [
       {
-        src: '/trans1.png',
-        alt: 'Transcendance landing page',
+        src: '/vt-remar.png',
+        alt: 'VT remar landing page',
       },
-      {
-        src: '/trans2.png',
-        alt: 'Transcendance game',
-      },
-      {
-        src: '/trans3.png',
-        alt: 'Transcendance game',
-      },
-      {
-        src: '/trans4.png',
-        alt: 'Transcendance game',
-      },
-      {
-        src: '/trans5.png',
-        alt: 'Transcendance game',
-      },
-      {
-        src: '/trans6.png',
-        alt: 'Transcendance game',
-      }
-
     ],
   },
   {
-    title: 'Minishell',
+    title: 'Vyoo',
     description:
-      "Minishell is a project that aims to create a simple shell. It's a great introduction to process creation and management in C, offering fundamental Unix command-line functionality. This was a very challenging project, but I learned a lot from it.",
-    techStack: ['C', 'Unix', 'Bash'],
-    date: '2023',
-    links: [
-      {
-        name: 'GitHub',
-        url: 'https://github.com/toukoum/Michelle-42',
-      },
+      'Vyoo is a community management platform designed to help creators and community managers build, engage, and monetize their online communities. It offers tools for content creation, member management, event organization, and analytics to foster a thriving community environment.',
+    techStack: [
+      'React',
+      'TypeScript',
+      'Redux',
+      'TailwindCSS',
+      'Nest.js',
+      'Express',
+      'MongoDB',
+      'AWS',
+      'Stripe',
     ],
-    images: [
-      {
-        src: '/minishell1.png',
-        alt: 'Minishell landing page',
-      }
-    ],
-  },
-  {
-    title: 'YouBot',
-    description:
-      'YouBot is a Python Bot that Scrapes Videos from Pexels, adds a random song from a Songs Folder, then auto-uploads the videos to your YouTube Channel for continuous content generation.',
-    techStack: ['Python', 'YouTube API', 'Pexels API'],
     date: '2022',
     links: [
       {
-        name: "YouTube Video",
-        url: "https://youtu.be/vp1v5mBG7rA "
+        name: 'App URL',
+        url: 'https://www.vyoo.me/',
       },
-      {
-        name: 'GitHub',
-        url: 'https://github.com/toukoum/YouBot',
-      }
     ],
     images: [
       {
-        src: '/youbot1.jpg',
-        alt: 'Youbot landing page',
-      },
-      {
-        src: '/youbot2.png',
-        alt: 'Youbot chatbot',
+        src: '/vyoo.png',
+        alt: 'Vyoo landing page',
       },
     ],
-  }
+  },
 ];
 
 // Define interface for project prop
@@ -360,7 +159,7 @@ const ProjectContent = ({ project }: { project: ProjectProps }) => {
       {/* Links section */}
       {projectData.links && projectData.links.length > 0 && (
         <div className="mb-24">
-          <div className="px-6 mb-4 flex items-center gap-2">
+          <div className="mb-4 flex items-center gap-2 px-6">
             <h3 className="text-sm tracking-wide text-neutral-500 dark:text-neutral-400">
               Links
             </h3>
@@ -369,16 +168,16 @@ const ProjectContent = ({ project }: { project: ProjectProps }) => {
           <Separator className="my-4" />
           <div className="space-y-3">
             {projectData.links.map((link, index) => (
-                <a
+              <a
                 key={index}
                 href={link.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group bg-[#F5F5F7] flex items-center justify-between rounded-xl p-4 transition-colors hover:bg-[#E5E5E7] dark:bg-neutral-800 dark:hover:bg-neutral-700"
-                >
+                className="group flex items-center justify-between rounded-xl bg-[#F5F5F7] p-4 transition-colors hover:bg-[#E5E5E7] dark:bg-neutral-800 dark:hover:bg-neutral-700"
+              >
                 <span className="font-light capitalize">{link.name}</span>
                 <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-                </a>
+              </a>
             ))}
           </div>
         </div>
@@ -408,60 +207,23 @@ const ProjectContent = ({ project }: { project: ProjectProps }) => {
   );
 };
 
-// Main data export with updated content
 export const data = [
   {
-    category: 'Arthur Web App',
-    title: 'Synto',
-    src: '/syntopreview.png',
-    content: <ProjectContent project={{ title: 'Synto' }} />,
+    category: 'Enterprise SaaS',
+    title: 'Arthur Web App',
+    src: '/arthur-room.png',
+    content: <ProjectContent project={{ title: 'Arthur Web App' }} />,
   },
   {
-    category: 'Fun Tool',
-    title: 'Rrate',
-    src: '/ratepreview.png',
-    content: <ProjectContent project={{ title: 'Rrate' }} />,
+    category: 'EdTech Platform',
+    title: 'ReMar VT E-Learning Platform',
+    src: '/vt-remar.png',
+    content: <ProjectContent project={{ title: 'Remar VT' }} />,
   },
   {
-    category: 'Hackathon Winner',
-    title: 'Defai',
-    src: '/defaipreview.png',
-    content: <ProjectContent project={{ title: 'Defai' }} />,
-  },
-  {
-    category: 'Hackathon Winner',
-    title: 'Fitgear',
-    src: '/fitgearpreview.png',
-    content: <ProjectContent project={{ title: 'Fitgear' }} />,
-  },
-  {
-    category: 'Business Intelligence',
-    title: 'Datai',
-    src: '/dataipreview.png',
-    content: <ProjectContent project={{ title: 'Datai' }} />,
-  },
-  {
-    category: '42 Project',
-    title: '3d Pong Game',
-    src: '/transcendancepreview.png',
-    content: <ProjectContent project={{ title: '3d Pong Game' }} />,
-  },
-  {
-    category: '42 Project',
-    title: 'Minishell',
-    src: '/minishellpreview.png',
-    content: <ProjectContent project={{ title: 'Minishell' }} />,
-  },
-  {
-    category: 'Automation',
-    title: 'YouBot',
-    src: '/youbotpreview.png',
-    content: <ProjectContent project={{ title: 'YouBot' }} />,
-  },
-  {
-    category: 'Web Development',
-    title: 'Old Portfolio',
-    src: '/oldportfoliopreview.png',
-    content: <ProjectContent project={{ title: 'Old Portfolio' }} />,
+    category: 'Community Management',
+    title: 'Vyoo - Community Management Platform',
+    src: '/vyoo.png',
+    content: <ProjectContent project={{ title: 'Vyoo' }} />,
   },
 ];

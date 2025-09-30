@@ -13,7 +13,7 @@ export function Presentation() {
     description:
       "Hey 👋\n\nI'm Muhammad Ali, a Senior Software Engineer. I specialize in architecting scalable systems and user-centric platforms. With expertise in modern frameworks, cloud (AWS/GCP), and high-performance systems, I'm passionate about solving complex challenges and driving impactful innovation.",
 
-    src: '/profil-ali.png',
+    src: '/profile-ali.png',
     fallbackSrc:
       'https://images.unsplash.com/photo-1610216705422-caa3fcb6d158?q=80&w=3560&auto=format&fit=crop&ixlib=rb-4.0.3',
   };
