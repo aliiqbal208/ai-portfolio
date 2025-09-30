@@ -5,9 +5,9 @@ import { z } from "zod";
 
 export const getSports = tool({
   description:
-    "This tool will show some photos of Muhammad Ali doing sports",
+    "This tool will show Muhammad Ali's favorite sports and activities",
   parameters: z.object({}),
   execute: async () => {
-    return "Here my best pictures of me doing sports!";
+    return "Here are the sports and activities I enjoy: Cricket (Advanced), Gym (Hard), Snooker (Intermediate), and Tekken (Casual).";
   },
 });
