@@ -5,10 +5,9 @@ import { MotionDiv, MotionButton } from '@/lib/motion-components';
 
 interface ChatLandingProps {
   submitQuery: (query: string) => void;
-  hasReachedLimit?: boolean;
 }
 
-const ChatLanding: React.FC<ChatLandingProps> = ({ submitQuery, hasReachedLimit = false }) => {
+const ChatLanding: React.FC<ChatLandingProps> = ({ submitQuery }) => {
   // Suggested questions that the user can click on
   const suggestedQuestions = [
     {
@@ -77,16 +76,11 @@ const ChatLanding: React.FC<ChatLandingProps> = ({ submitQuery, hasReachedLimit 
         {suggestedQuestions.map((question, index) => (
           <MotionButton
             key={index}
-            className={`flex w-full items-center rounded-lg px-4 py-3 transition-colors ${
-              hasReachedLimit 
-                ? 'bg-gray-100 cursor-not-allowed opacity-50' 
-                : 'bg-accent hover:bg-accent/80'
-            }`}
-            onClick={() => !hasReachedLimit && submitQuery(question.text)}
+            className="flex w-full items-center rounded-lg px-4 py-3 transition-colors bg-accent hover:bg-accent/80"
+            onClick={() => submitQuery(question.text)}
             variants={itemVariants}
-            whileHover={!hasReachedLimit ? { scale: 1.02 } : {}}
-            whileTap={!hasReachedLimit ? { scale: 0.98 } : {}}
-            disabled={hasReachedLimit}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
           >
             <span className="bg-background mr-3 rounded-full p-2">
               {question.icon}

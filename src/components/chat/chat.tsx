@@ -18,7 +18,6 @@ import {
 } from '@/components/ui/chat/chat-bubble';
 import HelperBoost from './HelperBoost';
 import { PoweredByFastfolio } from '@/components/powered-by-fastfolio';
-import { FastfolioTracking } from '@/lib/fastfolio-tracking';
 
 // ClientOnly component for client-side rendering
 //@ts-ignore
@@ -124,9 +123,7 @@ const Chat = () => {
   const [autoSubmitted, setAutoSubmitted] = useState(false);
   const [loadingSubmit, setLoadingSubmit] = useState(false);
   const [isTalking, setIsTalking] = useState(false);
-  const [showFastfolioPopup, setShowFastfolioPopup] = useState(false);
-  const [hasReachedLimit, setHasReachedLimit] = useState(false);
-  const [, forceUpdate] = useState({});
+  const [showContactPrompt, setShowContactPrompt] = useState(false);
 
   const {
     messages,
@@ -149,14 +146,10 @@ const Chat = () => {
           });
         }
         
-        // Don't increment here since we already increment on submit
-        // Just check if we should show popup
-        if (FastfolioTracking.shouldShowPopup()) {
+        // Show contact prompt after 5 messages
+        if (messages.length >= 5 && !showContactPrompt) {
           setTimeout(() => {
-            setShowFastfolioPopup(true);
-            if (!FastfolioTracking.hasReachedLimit()) {
-              FastfolioTracking.markPopupShown();
-            }
+            setShowContactPrompt(true);
           }, 2000);
         }
       }
@@ -227,26 +220,7 @@ const Chat = () => {
 
   //@ts-ignore
   const submitQuery = (query) => {
-    // Check rate limit before submitting
-    if (FastfolioTracking.hasReachedLimit()) {
-      setHasReachedLimit(true);
-      setShowFastfolioPopup(true);
-      return;
-    }
-    
     if (!query.trim() || isToolInProgress) return;
-    
-    // Increment message count
-    FastfolioTracking.incrementMessageCount();
-    
-    // Force re-render to update remaining messages counter
-    forceUpdate({});
-    
-    // Check if limit reached after increment
-    if (FastfolioTracking.hasReachedLimit()) {
-      setHasReachedLimit(true);
-      setShowFastfolioPopup(true);
-    }
     
     setLoadingSubmit(true);
     append({
@@ -263,11 +237,7 @@ const Chat = () => {
       videoRef.current.pause();
     }
 
-    // Check rate limit on mount
-    if (FastfolioTracking.hasReachedLimit()) {
-      setHasReachedLimit(true);
-      setShowFastfolioPopup(true);
-    }
+    // No rate limiting - allow unlimited messages
     
     if (initialQuery && !autoSubmitted) {
       setAutoSubmitted(true);
@@ -291,13 +261,6 @@ const Chat = () => {
   //@ts-ignore
   const onSubmit = (e) => {
     e.preventDefault();
-    
-    // Check rate limit
-    if (FastfolioTracking.hasReachedLimit()) {
-      setHasReachedLimit(true);
-      setShowFastfolioPopup(true);
-      return;
-    }
     
     if (!input.trim() || isToolInProgress) return;
     submitQuery(input);
@@ -379,7 +342,7 @@ const Chat = () => {
                 className="flex min-h-full items-center justify-center"
                 {...MOTION_CONFIG}
               >
-                <ChatLanding submitQuery={submitQuery} hasReachedLimit={hasReachedLimit} />
+                <ChatLanding submitQuery={submitQuery} />
               </MotionDiv>
             ) : currentAIMessage ? (
               <div className="pb-4">
@@ -409,15 +372,15 @@ const Chat = () => {
         {/* Fixed Bottom Bar */}
         <div className="sticky bottom-0 bg-white px-2 pt-3 md:px-0 md:pb-4">
           <div className="relative flex flex-col items-center gap-3">
-            <HelperBoost submitQuery={submitQuery} hasReachedLimit={hasReachedLimit} />
+            <HelperBoost submitQuery={submitQuery} />
             <ChatBottombar
-              input={hasReachedLimit ? "You've reached your message limit. Create your own Fastfolio to continue chatting!" : input}
-              handleInputChange={hasReachedLimit ? () => {} : handleInputChange}
+              input={input}
+              handleInputChange={handleInputChange}
               handleSubmit={onSubmit}
               isLoading={isLoading}
               stop={handleStop}
-              isToolInProgress={isToolInProgress || hasReachedLimit}
-              disabled={hasReachedLimit}
+              isToolInProgress={isToolInProgress}
+              disabled={false}
             />
           </div>
           <PoweredByFastfolio />
