@@ -6,6 +6,6 @@ export const getContact = tool({
     'This tool show a my contact informations.',
   parameters: z.object({}),
   execute: async () => {
-    return "Here is my contact informations above, Feel free to contact me I will be happy to answer you 😉";
+    return `You can reach me at:\n\n- Email: aliiqbal208@gmail.com\n- LinkedIn: https://www.linkedin.com/in/aliiqbal208/\n- Website: https://themuhammadali.dev/`;
   },
 });

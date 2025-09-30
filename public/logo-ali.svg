@@ -1,0 +1,63 @@
+<svg width="128" height="128" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Muhammad Ali – AI Portfolio logo">
+  <defs>
+    <!-- Primary brand gradient -->
+    <linearGradient id="ring" x1="0" y1="0" x2="128" y2="128" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#22D3EE"/>
+      <stop offset="50%" stop-color="#A78BFA"/>
+      <stop offset="100%" stop-color="#38BDF8"/>
+    </linearGradient>
+    <!-- Inner soft glow -->
+    <radialGradient id="inner" cx="0" cy="0" r="1" gradientTransform="translate(64 64) rotate(90) scale(52)">
+      <stop stop-color="#FFFFFF" stop-opacity="0.16"/>
+      <stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/>
+    </radialGradient>
+    <!-- Subtle drop shadow -->
+    <filter id="shadow" x="-30%" y="-30%" width="160%" height="160%" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="8" stdDeviation="10" flood-opacity="0.22"/>
+    </filter>
+    <!-- Sparkle gradient -->
+    <linearGradient id="spark" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#FFFFFF"/>
+      <stop offset="1" stop-color="#FFFFFF" stop-opacity="0.2"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Outer gradient ring -->
+  <g filter="url(#shadow)">
+    <circle cx="64" cy="64" r="50" fill="none" stroke="url(#ring)" stroke-width="12"/>
+  </g>
+
+  <!-- Inner plate -->
+  <circle cx="64" cy="64" r="44" fill="#0B1220"/>
+  <circle cx="64" cy="64" r="44" fill="url(#inner)"/>
+
+  <!-- Neural constellation (nodes + links) -->
+  <g stroke="#93C5FD" stroke-opacity="0.55">
+    <circle cx="44" cy="52" r="2.2" fill="#93C5FD"/>
+    <circle cx="76" cy="44" r="2" fill="#93C5FD"/>
+    <circle cx="90" cy="68" r="2.4" fill="#93C5FD"/>
+    <circle cx="56" cy="84" r="2" fill="#93C5FD"/>
+    <path d="M44 52 L76 44 L90 68 L56 84 L44 52" stroke-width="1.25"/>
+  </g>
+
+  <!-- Stylized monogram: A / I (centered) -->
+  <g transform="translate(64,64)">
+    <!-- A: left angled stroke + crossbar -->
+    <path d="M-18 18 L-3 -18" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round"/>
+    <path d="M-20 6 L-2 6" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round"/>
+    <!-- I: right vertical with caps -->
+    <path d="M12 -10 L28 -10" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round"/>
+    <path d="M20 -10 L20 18" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round"/>
+    <path d="M12 18 L28 18" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round"/>
+  </g>
+
+  <!-- Sparkle accent -->
+  <g transform="translate(96,32) rotate(20)">
+    <path d="M0 6 L6 0 L12 6 L6 12 Z" fill="url(#spark)"/>
+  </g>
+
+  <!-- Subtle arc shine over ring -->
+  <path d="M24 56 C 36 32, 92 30, 104 54" stroke="#FFFFFF" stroke-opacity="0.18" stroke-width="3" fill="none"/>
+</svg>
+
+
