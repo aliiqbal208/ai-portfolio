@@ -2,75 +2,44 @@
 
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Code, Cpu, PenTool, Users } from 'lucide-react';
+import { Code, Cpu, Database, Cloud, BarChart3 } from 'lucide-react';
 import { MotionDiv } from '@/lib/motion-components';
 
 const Skills = () => {
   const skillsData = [
     {
-      category: 'Frontend Development',
+      category: 'Programming Languages',
       icon: <Code className="h-5 w-5" />,
-      skills: [
-        'JavaScript',
-        'TypeScript',
-        'React',
-        'Next.js',
-        'Angular',
-        'HTML',
-        'CSS',
-        'Tailwind CSS',
-        'Material UI',
-        'Shadcn UI',
-        'Redux / Zustand',
-      ],
-      color: 'bg-blue-50 text-blue-600 border border-blue-200',
-    },
-    {
-      category: 'Backend & Systems',
-      icon: <Cpu className="h-5 w-5" />,
       skills: [
         'JavaScript',
         'TypeScript',
         'Node.js',
         'Python',
         'Golang',
+      ],
+      color: 'bg-blue-50 text-blue-600 border border-blue-200',
+    },
+    {
+      category: 'Frontend Frameworks',
+      icon: <Code className="h-5 w-5" />,
+      skills: [
+        'React',
+        'Next.js',
+        'Angular',
+      ],
+      color: 'bg-cyan-50 text-cyan-600 border border-cyan-200',
+    },
+    {
+      category: 'Backend Frameworks',
+      icon: <Cpu className="h-5 w-5" />,
+      skills: [
         'Express',
         'Fastify',
         'Go Fiber',
         'Flask',
         'FastAPI',
-        'AWS',
-        'GCP',
-        'Docker',
-        'Redis',
-        'GitHub Actions',
-        'MongoDB',
-        'PostgreSQL',
-        'Microservices',
-        'Serverless',
-        'WebSockets',
       ],
       color: 'bg-emerald-50 text-emerald-600 border border-emerald-200',
-    },
-    {
-      category: 'Design & Creative Tools',
-      icon: <PenTool className="h-5 w-5" />,
-      skills: ['Figma', 'Davinci Code', 'Illustrator', 'Canva', 'Keynote'],
-      color: 'bg-indigo-50 text-indigo-600 border border-indigo-200',
-    },
-    {
-      category: 'Soft Skills',
-      icon: <Users className="h-5 w-5" />,
-      skills: [
-        'Communication',
-        'Problem-Solving',
-        'Adaptability',
-        'Learning Agility',
-        'Teamwork',
-        'Creativity',
-        'Focus',
-      ],
-      color: 'bg-amber-50 text-amber-600 border border-amber-200',
     },
     {
       category: 'AI & Data',
@@ -78,18 +47,70 @@ const Skills = () => {
       skills: [
         'OpenAI',
         'Hugging Face',
-        'LLM Integration',
+        'LLMs',
         'RAG Pipelines',
-        'Embeddings',
-        'Chatbots',
         'Semantic Search',
+        'Chatbot Development',
         'Speech Processing',
-        'Automation Workflows',
-        'AI Agents',
-        'Prompt Engineering',
-        'Vector Databases',
+        'AI Automations',
+        'Agentic AI',
+        'MCP',
       ],
       color: 'bg-purple-50 text-purple-600 border border-purple-200',
+    },
+    {
+      category: 'Cloud & Infrastructure',
+      icon: <Cloud className="h-5 w-5" />,
+      skills: [
+        'AWS',
+        'S3',
+        'Lambda',
+        'DynamoDB',
+        'GCP',
+        'Docker',
+        'Redis',
+        'GitHub Actions',
+      ],
+      color: 'bg-orange-50 text-orange-600 border border-orange-200',
+    },
+    {
+      category: 'Databases',
+      icon: <Database className="h-5 w-5" />,
+      skills: [
+        'MongoDB',
+        'PostgreSQL',
+        'ORMs',
+        'Native Drivers',
+      ],
+      color: 'bg-green-50 text-green-600 border border-green-200',
+    },
+    {
+      category: 'Architecture & Systems',
+      icon: <BarChart3 className="h-5 w-5" />,
+      skills: [
+        'Scalable Systems',
+        'Microservices',
+        'Serverless',
+        'Event-driven Systems',
+        'Real-time Systems',
+        'Kafka',
+        'WebSockets',
+        'Pub/Sub',
+      ],
+      color: 'bg-indigo-50 text-indigo-600 border border-indigo-200',
+    },
+    {
+      category: 'Monitoring & Observability',
+      icon: <BarChart3 className="h-5 w-5" />,
+      skills: [
+        'Prometheus',
+        'Grafana',
+        'ELK Stack',
+        'Splunk',
+        'Datadog',
+        'Sentry',
+      ],
+      color: 'bg-red-50 text-red-600 border border-red-200',
     },
   ];
 
