@@ -1,0 +1,1 @@
+This is a known-clean test file for ClamAV checks.
