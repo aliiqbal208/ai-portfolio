@@ -1,0 +1,4 @@
+=== RUN: npm run -s lint
+sh: 1: next: not found
+=== EXIT: 127
+

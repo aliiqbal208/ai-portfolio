@@ -1,0 +1,53 @@
+{
+  "detected_at": 1779052124,
+  "setup": [
+    "npm install"
+  ],
+  "test": [
+    "npm run -s lint",
+    "npm run -s build"
+  ],
+  "build": [
+    "pnpm run build"
+  ],
+  "deploy": [],
+  "test_groups": {
+    "unit": [
+      "npm run -s lint"
+    ],
+    "integration": [
+      "npm run -s build"
+    ],
+    "e2e": []
+  },
+  "risk": {
+    "level": "full",
+    "requires_full_suite": false
+  },
+  "e2e": {
+    "detected": false,
+    "runnable": false,
+    "command": [],
+    "start_command": "",
+    "base_url": "",
+    "base_url_env": "PLAYWRIGHT_BASE_URL",
+    "required_env": [],
+    "missing_env": [],
+    "reason": "not_detected",
+    "project_path": ""
+  },
+  "auto_fix": {
+    "enabled": true,
+    "max_attempts": 3,
+    "post_merge_validation": true,
+    "pr_triggers": [
+      "opened",
+      "synchronize",
+      "reopened"
+    ]
+  },
+  "notes": [
+    "Detected Next.js project at ..",
+    "No runnable test commands detected. Configure .verity/config.yml manually."
+  ]
+}
