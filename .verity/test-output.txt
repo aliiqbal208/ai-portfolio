@@ -1,0 +1,5 @@
+=== RUN: python scripts/clamav_scan.py
+[clamav] Not installed; skipping
+=== EXIT: 0
+
+[e2e] Skipped: missing_env
