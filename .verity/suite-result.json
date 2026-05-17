@@ -1,0 +1,33 @@
+{
+  "success": false,
+  "phase": "detect",
+  "failed_command": "",
+  "fixable": false,
+  "failure_category": "environment",
+  "failure_reason": "no_tests_detected",
+  "stop_reason": "no_tests_detected",
+  "e2e": {
+    "detected": false,
+    "runnable": false,
+    "command": [],
+    "start_command": "",
+    "base_url": "",
+    "base_url_env": "PLAYWRIGHT_BASE_URL",
+    "required_env": [],
+    "missing_env": [],
+    "reason": "not_detected",
+    "project_path": ""
+  },
+  "commands": {
+    "unit": [],
+    "integration": [],
+    "e2e": []
+  },
+  "groups_run": {
+    "unit": [],
+    "integration": [],
+    "e2e": [],
+    "build": []
+  },
+  "groups_skipped": {}
+}
