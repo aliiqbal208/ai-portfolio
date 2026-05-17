@@ -1,0 +1,9 @@
+=== RUN: npm test
+
+> portfolio.com@0.1.0 test
+> echo No tests; exit 0
+
+No tests
+=== EXIT: 0
+
+[e2e] Skipped: missing_env
