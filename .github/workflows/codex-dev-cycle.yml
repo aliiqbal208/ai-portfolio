@@ -168,7 +168,7 @@ jobs:
           VERITY_CALLBACK_URL: ${{ steps.cfg.outputs.callback_url }}
           ISSUE_NUMBER: ${{ inputs.issue_number }}
         run: |
-          if [ -z "$VERITY_CALLBACK_URL" ] || [ "$VERITY_CALLBACK_URL" = "https://localhost:3001/api/callbacks/github-actions" ]; then
+          if [ -z "$VERITY_CALLBACK_URL" ] || [ "$VERITY_CALLBACK_URL" = "https://8453-124-29-214-31.ngrok-free.app/api/callbacks/github-actions" ]; then
             echo "Skipping callback: callback URL not configured"
             exit 0
           fi
@@ -879,7 +879,7 @@ jobs:
           E2E_SPECS_COUNT: ${{ steps.e2e_specs.outputs.count || '0' }}
           ISSUE_NUMBER: ${{ inputs.issue_number }}
         run: |
-          if [ -z "$VERITY_CALLBACK_URL" ] || [ "$VERITY_CALLBACK_URL" = "https://localhost:3001/api/callbacks/github-actions" ]; then
+          if [ -z "$VERITY_CALLBACK_URL" ] || [ "$VERITY_CALLBACK_URL" = "https://8453-124-29-214-31.ngrok-free.app/api/callbacks/github-actions" ]; then
             echo "Skipping callback: callback URL not configured"
             exit 0
           fi
