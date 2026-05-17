@@ -11,7 +11,8 @@ commands:
   build: []
   deploy: []
   test_groups:
-    unit: []
+    unit:
+    - python scripts/clamav_scan.py --paths . --json-out .verity/clamav-report.json
     integration: []
     e2e: []
 

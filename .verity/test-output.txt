@@ -1,0 +1,4 @@
+=== RUN: python scripts/clamav_scan.py --paths . --json-out .verity/clamav-report.json
+=== EXIT: 0
+
+[e2e] Skipped: missing_env
