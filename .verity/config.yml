@@ -1,43 +1,44 @@
 version: 1
 verity:
-  project_id: "5989e0fb-4b8d-497a-8518-8dadb7de8cf4"
-  callback_url: "https://8453-124-29-214-31.ngrok-free.app/api/callbacks/github-actions"
-  bootstrap_version: "v2"
+  project_id: 5989e0fb-4b8d-497a-8518-8dadb7de8cf4
+  callback_url: https://8453-124-29-214-31.ngrok-free.app/api/callbacks/github-actions
+  bootstrap_version: v2
   max_generated_stories: 500
-
 commands:
-  setup: []
+  setup:
+  - npm install
   test: []
-  build: []
+  build:
+  - npm run build
   deploy: []
   test_groups:
     unit: []
     integration: []
-    e2e: []
-
+    e2e:
+    - npm run test:e2e
 automation:
   test_auto_fix:
     enabled: true
     max_attempts: 3
     post_merge_validation: true
     pr_triggers:
-      - "opened"
-      - "synchronize"
-      - "reopened"
+    - opened
+    - synchronize
+    - reopened
   e2e:
-    enabled: "auto"
-    command: []
-    start_command: ""
-    base_url: ""
-    base_url_env: "PLAYWRIGHT_BASE_URL"
+    enabled: auto
+    command:
+    - npm run test:e2e
+    start_command: npm run dev -- --hostname 0.0.0.0
+    base_url: http://127.0.0.1:3000
+    base_url_env: PLAYWRIGHT_BASE_URL
     required_env: []
-
 policies:
   pr_review:
     enabled: true
-    label_required: "verity:agent"
+    label_required: verity:agent
   openai_guardrail:
     enabled: true
   documentation:
     auto_mode: true
-    handoff_file: "docs/AI_HANDOFF.md"
+    handoff_file: docs/AI_HANDOFF.md
