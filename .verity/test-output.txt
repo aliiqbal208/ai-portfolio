@@ -1,0 +1,8 @@
+=== RUN: python scripts/check_no_direct_openai.py
+Bootstrap placeholders still present in .verity/config.yml:
+ - .verity/config.yml still contains placeholder https://8453-124-29-214-31.ngrok-free.app/api/callbacks/github-actions
+ - .verity/config.yml still contains placeholder 5989e0fb-4b8d-497a-8518-8dadb7de8cf4
+ - .verity/config.yml still contains placeholder v2
+Hint: set verity.project_id and verity.callback_url from your Verity project (not template strings or the shared staging callback URL).
+=== EXIT: 1
+
