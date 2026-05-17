@@ -1,0 +1,47 @@
+{
+  "success": false,
+  "phase": "unit",
+  "failed_command": "python scripts/check_no_direct_openai.py",
+  "fixable": true,
+  "failure_category": "code",
+  "failure_reason": "test_failure",
+  "stop_reason": "test_failure",
+  "e2e": {
+    "detected": true,
+    "runnable": false,
+    "command": [
+      "pnpm exec playwright test"
+    ],
+    "start_command": "pnpm run dev -- --hostname 0.0.0.0",
+    "base_url": "http://127.0.0.1:3000",
+    "base_url_env": "PLAYWRIGHT_BASE_URL",
+    "required_env": [
+      "VERITY_E2E_EMAIL",
+      "VERITY_E2E_PASSWORD"
+    ],
+    "missing_env": [
+      "VERITY_E2E_EMAIL",
+      "VERITY_E2E_PASSWORD"
+    ],
+    "reason": "missing_env",
+    "project_path": "."
+  },
+  "commands": {
+    "unit": [
+      "python scripts/check_no_direct_openai.py"
+    ],
+    "integration": [],
+    "e2e": [
+      "pnpm exec playwright test"
+    ]
+  },
+  "groups_run": {
+    "unit": [
+      "python scripts/check_no_direct_openai.py"
+    ],
+    "integration": [],
+    "e2e": [],
+    "build": []
+  },
+  "groups_skipped": {}
+}
