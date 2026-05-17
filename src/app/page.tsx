@@ -92,7 +92,7 @@ export default function Home() {
 
       {/* header */}
       <MotionDiv
-        className="z-1 mt-24 mb-8 flex flex-col items-center text-center md:mt-4 md:mb-12"
+        className="z-10 mt-24 mb-8 flex flex-col items-center text-center md:mt-4 md:mb-12"
         variants={topElementVariants}
         initial="hidden"
         animate="visible"
@@ -159,6 +159,7 @@ export default function Home() {
             <Button
               key={key}
               onClick={() => goToChat(questions[key])}
+              aria-label={`Quick question: ${key}`}
               variant="outline"
               className="border-border hover:bg-border/30 aspect-square w-full cursor-pointer rounded-2xl border bg-white/30 py-8 shadow-none backdrop-blur-lg active:scale-95 md:p-10"
             >
