@@ -136,7 +136,7 @@ export default function Home() {
           <div className="mx-auto flex items-center rounded-full border border-neutral-200 bg-white/30 py-2.5 pr-2 pl-6 backdrop-blur-lg transition-all hover:border-neutral-300 dark:border-neutral-700 dark:bg-neutral-800 dark:hover:border-neutral-600">
             <input
               ref={inputRef}
-              type="text"
+              type="text" autoFocus
               value={input}
               onChange={(e) => setInput(e.target.value)}
               placeholder="Ask me anything…"
