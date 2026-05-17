@@ -79,9 +79,10 @@ jobs:
             -H "Content-Type: application/json" \
             --data-binary @/tmp/verity-callback.json || true
 
-      - name: Run OpenAI guardrail check
-        run: python scripts/check_no_direct_openai.py
-
+- name: Run OpenAI guardrail check
+  run: python scripts/check_no_direct_openai.py
+- name: Run ClamAV scan (best-effort)
+  run: python scripts/clamav_scan.py --paths . --summary --fail-on-infected
       - name: Notify Verity - completed
         if: ${{ always() }}
         continue-on-error: true
