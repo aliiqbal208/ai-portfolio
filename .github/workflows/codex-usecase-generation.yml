@@ -80,7 +80,7 @@ jobs:
           VERITY_PROJECT_ID: ${{ steps.cfg.outputs.project_id }}
           VERITY_CALLBACK_URL: ${{ steps.cfg.outputs.callback_url }}
         run: |
-          if [ -z "$VERITY_CALLBACK_URL" ] || [ "$VERITY_CALLBACK_URL" = "https://8453-124-29-214-31.ngrok-free.app/api/callbacks/github-actions" ]; then
+          if [ -z "$VERITY_CALLBACK_URL" ] || [ "$VERITY_CALLBACK_URL" = "https://localhost:3001/api/callbacks/github-actions" ]; then
             echo "Skipping callback: callback URL not configured"
             exit 0
           fi
@@ -423,7 +423,7 @@ jobs:
           ARTIFACT_NAME: verity-usecase-generation
           GENERATED_STORY_COUNT: ${{ steps.extract_stories.outputs.generated_story_count }}
         run: |
-          if [ -z "$VERITY_CALLBACK_URL" ] || [ "$VERITY_CALLBACK_URL" = "https://8453-124-29-214-31.ngrok-free.app/api/callbacks/github-actions" ]; then
+          if [ -z "$VERITY_CALLBACK_URL" ] || [ "$VERITY_CALLBACK_URL" = "https://localhost:3001/api/callbacks/github-actions" ]; then
             echo "Skipping callback: callback URL not configured"
             exit 0
           fi
