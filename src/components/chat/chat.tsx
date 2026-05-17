@@ -380,6 +380,7 @@ const Chat = () => {
               isLoading={isLoading}
               stop={handleStop}
               isToolInProgress={isToolInProgress}
+              setInput={setInput}
               disabled={false}
             />
           </div>
