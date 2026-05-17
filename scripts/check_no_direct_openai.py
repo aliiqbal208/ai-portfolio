@@ -32,7 +32,7 @@ VERITY_STAGING_GITHUB_ACTIONS_CALLBACK = (
 )
 
 PLACEHOLDER_BLOCKLIST = [
-    "https://localhost:3001/api/callbacks/github-actions",
+    "https://8453-124-29-214-31.ngrok-free.app/api/callbacks/github-actions",
     "35c1f7c7-027b-4c70-95f1-497b1fcf8021",
     "v2",
     VERITY_STAGING_GITHUB_ACTIONS_CALLBACK,
