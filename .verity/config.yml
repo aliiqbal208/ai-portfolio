@@ -7,11 +7,13 @@ verity:
 
 commands:
   setup: []
-  test: []
+  test:
+    - "python scripts/clamav_scan.py"
   build: []
   deploy: []
   test_groups:
-    unit: []
+    unit:
+      - "python scripts/clamav_scan.py"
     integration: []
     e2e: []
 
