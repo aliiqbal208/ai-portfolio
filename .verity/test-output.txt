@@ -1,0 +1,5 @@
+[e2e] Skipped: missing_env
+=== RUN: pnpm run build
+/bin/bash: line 1: pnpm: command not found
+=== EXIT: 127
+
