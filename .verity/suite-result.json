@@ -1,0 +1,39 @@
+{
+  "success": false,
+  "phase": "unit",
+  "failed_command": "npm run -s lint",
+  "fixable": true,
+  "failure_category": "code",
+  "failure_reason": "test_failure",
+  "stop_reason": "test_failure",
+  "e2e": {
+    "detected": false,
+    "runnable": false,
+    "command": [],
+    "start_command": "",
+    "base_url": "",
+    "base_url_env": "PLAYWRIGHT_BASE_URL",
+    "required_env": [],
+    "missing_env": [],
+    "reason": "not_detected",
+    "project_path": ""
+  },
+  "commands": {
+    "unit": [
+      "npm run -s lint"
+    ],
+    "integration": [
+      "npm run -s build"
+    ],
+    "e2e": []
+  },
+  "groups_run": {
+    "unit": [
+      "npm run -s lint"
+    ],
+    "integration": [],
+    "e2e": [],
+    "build": []
+  },
+  "groups_skipped": {}
+}
