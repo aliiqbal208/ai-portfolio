@@ -123,7 +123,7 @@ jobs:
           PR_NUMBER: ${{ steps.pr.outputs.number }}
           PR_HEAD_SHA: ${{ steps.pr.outputs.head_sha }}
         run: |
-          if [ -z "$VERITY_CALLBACK_URL" ] || [ "$VERITY_CALLBACK_URL" = "https://8453-124-29-214-31.ngrok-free.app/api/callbacks/github-actions" ]; then
+          if [ -z "$VERITY_CALLBACK_URL" ] || [ "$VERITY_CALLBACK_URL" = "https://localhost:3001/api/callbacks/github-actions" ]; then
             echo "Skipping callback: callback URL not configured"
             exit 0
           fi
@@ -274,7 +274,7 @@ jobs:
           PR_BASE_REF: ${{ github.event.pull_request.base.ref }}
           CODEX_FINAL_MESSAGE: ${{ steps.run_codex.outputs.final-message }}
         run: |
-          if [ -z "$VERITY_CALLBACK_URL" ] || [ "$VERITY_CALLBACK_URL" = "https://8453-124-29-214-31.ngrok-free.app/api/callbacks/github-actions" ]; then
+          if [ -z "$VERITY_CALLBACK_URL" ] || [ "$VERITY_CALLBACK_URL" = "https://localhost:3001/api/callbacks/github-actions" ]; then
             echo "Skipping callback: callback URL not configured"
             exit 0
           fi
