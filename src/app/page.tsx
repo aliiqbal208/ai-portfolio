@@ -10,6 +10,7 @@ import {
   Layers,
   PartyPopper,
   UserRoundSearch,
+  X
 } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -136,12 +137,25 @@ export default function Home() {
           <div className="mx-auto flex items-center rounded-full border border-neutral-200 bg-white/30 py-2.5 pr-2 pl-6 backdrop-blur-lg transition-all hover:border-neutral-300 dark:border-neutral-700 dark:bg-neutral-800 dark:hover:border-neutral-600">
             <input
               ref={inputRef}
+              aria-label="Main question input"
               type="text"
               value={input}
               onChange={(e) => setInput(e.target.value)}
+              onKeyDown={(e) => { if (e.key === 'Escape' && input) { setInput(''); inputRef.current?.focus(); } }}
               placeholder="Ask me anything…"
               className="w-full border-none bg-transparent text-base text-neutral-800 placeholder:text-neutral-500 focus:outline-none dark:text-neutral-200 dark:placeholder:text-neutral-500"
             />
+            {input ? (
+              <button
+                type="button"
+                aria-label="Clear input"
+                data-testid="home-clear-input"
+                onClick={() => { setInput(''); inputRef.current?.focus(); }}
+                className="mr-1 flex items-center justify-center rounded-full bg-transparent p-2 text-neutral-600 hover:bg-neutral-200/70 dark:text-neutral-300 dark:hover:bg-neutral-700/60"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            ) : null}
             <button
               type="submit"
               disabled={!input.trim()}

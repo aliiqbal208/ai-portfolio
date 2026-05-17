@@ -2,7 +2,7 @@
 'use client';
 
 import { ChatRequestOptions } from 'ai';
-import { ArrowUp } from 'lucide-react';
+import { ArrowUp, X } from 'lucide-react';
 import React, { useEffect } from 'react';
 import { MotionDiv } from '@/lib/motion-components';
 
@@ -17,6 +17,7 @@ interface ChatBottombarProps {
   input: string;
   isToolInProgress: boolean;
   disabled?: boolean;
+  setInput: (val: string) => void;
 }
 
 export default function ChatBottombar({
@@ -27,11 +28,18 @@ export default function ChatBottombar({
   stop,
   isToolInProgress,
   disabled = false,
+  setInput,
 }: ChatBottombarProps) {
   const inputRef = React.useRef<HTMLInputElement>(null);
   
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Escape' && input) {
+      e.preventDefault();
+      setInput('');
+      inputRef.current?.focus();
+      return;
+    }
     if (
       e.key === 'Enter' &&
       !e.nativeEvent.isComposing &&
@@ -72,6 +80,17 @@ export default function ChatBottombar({
             disabled={isToolInProgress || isLoading || disabled}
           />
 
+          {input ? (
+            <button
+              type="button"
+              aria-label="Clear input"
+              data-testid="chat-clear-input"
+              onClick={() => { setInput(''); inputRef.current?.focus(); }}
+              className="mr-1 flex items-center justify-center rounded-full bg-transparent p-2 text-gray-600 hover:bg-gray-300/60"
+            >
+              <X className="h-5 w-5" />
+            </button>
+          ) : null}
           <button
             type="submit"
             disabled={isLoading || !input.trim() || isToolInProgress || disabled}
