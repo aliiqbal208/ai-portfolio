@@ -1,0 +1,42 @@
+{
+  "success": false,
+  "phase": "e2e",
+  "failed_command": "pnpm exec playwright test",
+  "fixable": true,
+  "failure_category": "code",
+  "failure_reason": "test_failure",
+  "stop_reason": "test_failure",
+  "e2e": {
+    "detected": true,
+    "runnable": true,
+    "command": [
+      "pnpm exec playwright test"
+    ],
+    "start_command": "pnpm run dev -- --hostname 0.0.0.0",
+    "base_url": "",
+    "base_url_env": "PLAYWRIGHT_BASE_URL",
+    "required_env": [],
+    "missing_env": [],
+    "reason": "ready",
+    "project_path": ""
+  },
+  "commands": {
+    "unit": [],
+    "integration": [],
+    "e2e": [
+      "pnpm exec playwright test"
+    ]
+  },
+  "groups_run": {
+    "unit": [],
+    "integration": [],
+    "e2e": [
+      "pnpm exec playwright test"
+    ],
+    "build": []
+  },
+  "groups_skipped": {
+    "unit": "not_configured",
+    "integration": "not_configured"
+  }
+}

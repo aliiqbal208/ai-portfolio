@@ -1,0 +1,6 @@
+[e2e] Starting target: pnpm run dev -- --hostname 0.0.0.0
+=== RUN: pnpm exec playwright test
+/bin/bash: line 1: pnpm: command not found
+/bin/bash: line 1: pnpm: command not found
+=== EXIT: 127
+
