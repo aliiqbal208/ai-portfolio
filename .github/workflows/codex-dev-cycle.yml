@@ -39,8 +39,20 @@ on:
         description: "Auto-merge the PR once all required checks pass (true/false)"
         required: false
         default: "false"
-      branch_name:
-        description: "Branch name for the fix PR (optional; defaults to verity/codex-dev-cycle-{run_id})"
+      tenant_path:
+        description: "Tenant directory path scope (optional)"
+        required: false
+        default: ""
+      allowed_write_globs:
+        description: "Comma-separated allowed write globs (optional)"
+        required: false
+        default: ""
+      target_repository:
+        description: "Target repository hint for tenant-scoped jobs"
+        required: false
+        default: ""
+      scope_policy_mode:
+        description: "Tenant isolation policy mode (none/suggest/enforce)"
         required: false
         default: ""
 
@@ -136,8 +148,6 @@ jobs:
             if isinstance(v, str) and v.strip(): return [v.strip()]
             return []
 
-          docs_auto = bool((policies.get("documentation", {}) or {}).get("auto_mode", False))
-
           out = os.environ["GITHUB_OUTPUT"]
           with open(out, "a", encoding="utf-8") as f:
             f.write(f"project_id={project_override or str(verity.get('project_id','')).strip()}\n")
@@ -145,13 +155,24 @@ jobs:
             f.write("setup_cmds<<EOF\n" + "\n".join(norm_list(commands.get("setup"))) + "\nEOF\n")
             f.write("test_cmds<<EOF\n" + "\n".join(norm_list(commands.get("test"))) + "\nEOF\n")
             f.write("build_cmds<<EOF\n" + "\n".join(norm_list(commands.get("build"))) + "\nEOF\n")
-            f.write(f"docs_auto_mode={'true' if docs_auto else 'false'}\n")
             f.write(f"pr_review_enabled={bool((policies.get('pr_review', {}) or {}).get('enabled', True))}\n")
             f.write(f"pr_review_label={str((policies.get('pr_review', {}) or {}).get('label_required','verity:agent')).strip()}\n")
+            docs_auto_mode = bool((policies.get('documentation', {}) or {}).get('auto_mode', False))
+            f.write(f"docs_auto_mode={'true' if docs_auto_mode else 'false'}\n")
           PY
         env:
           VERITY_CALLBACK_OVERRIDE: ${{ inputs.callback_url }}
           VERITY_PROJECT_OVERRIDE: ${{ inputs.verity_project_id }}
+
+      - name: Detect default monorepo Playwright layout
+        id: layout
+        run: |
+          if [ -d frontend ] && [ -f frontend/package.json ] && [ -d backend ] && [ -f backend/package.json ]; then
+            echo "monorepo_e2e=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "monorepo_e2e=false" >> "$GITHUB_OUTPUT"
+            echo "No frontend/ + backend/ with package.json — skipping Verity Playwright e2e (monorepo layout only)."
+          fi
 
       - name: Run setup commands
         if: ${{ steps.cfg.outputs.setup_cmds != '' }}
@@ -171,11 +192,9 @@ jobs:
           VERITY_PROJECT_ID: ${{ steps.cfg.outputs.project_id }}
           VERITY_CALLBACK_URL: ${{ steps.cfg.outputs.callback_url }}
           ISSUE_NUMBER: ${{ inputs.issue_number }}
+          BRANCH_NAME: ${{ github.ref_name }}
+          HEAD_SHA: ${{ github.sha }}
         run: |
-          if [ -z "$VERITY_CALLBACK_URL" ] || [ "$VERITY_CALLBACK_URL" = "https://8453-124-29-214-31.ngrok-free.app/api/callbacks/github-actions" ]; then
-            echo "Skipping callback: callback URL not configured"
-            exit 0
-          fi
           python - <<'PY' > /tmp/verity-callback.json
           import json, os
           payload = {
@@ -186,7 +205,10 @@ jobs:
             "run_id": os.environ.get("GITHUB_RUN_ID"),
             "run_attempt": os.environ.get("GITHUB_RUN_ATTEMPT"),
             "run_url": f"https://github.com/{os.environ.get('GITHUB_REPOSITORY')}/actions/runs/{os.environ.get('GITHUB_RUN_ID')}",
-            "issue_number": os.environ.get("ISSUE_NUMBER") or None
+            "issue_number": os.environ.get("ISSUE_NUMBER") or None,
+            "branch": os.environ.get("BRANCH_NAME") or None,
+            "sha": os.environ.get("HEAD_SHA") or None,
+            "run_correlation_id": f"{os.environ.get('GITHUB_WORKFLOW')}:{os.environ.get('GITHUB_RUN_ID')}:{os.environ.get('GITHUB_RUN_ATTEMPT')}"
           }
           print(json.dumps(payload))
           PY
@@ -218,17 +240,13 @@ jobs:
         env:
           ISSUE_NUMBER: ${{ inputs.issue_number }}
 
-      # ─── Install Playwright BEFORE Codex (drop-sudo kills sudo) ───
-      - name: Install Playwright browsers (before Codex drops sudo)
-        continue-on-error: true
-        id: pw_install
-        run: |
-          sudo npx playwright install-deps chromium
-          npx playwright install chromium
-
       - name: Render Codex prompt (append runtime inputs)
         env:
           USER_REQUEST: ${{ inputs.user_request }}
+          TENANT_PATH: ${{ inputs.tenant_path }}
+          ALLOWED_WRITE_GLOBS: ${{ inputs.allowed_write_globs }}
+          SCOPE_POLICY_MODE: ${{ inputs.scope_policy_mode }}
+          TARGET_REPOSITORY: ${{ inputs.target_repository }}
         run: |
           set -euo pipefail
           cat .github/codex/prompts/dev-cycle.md > codex-prompt.md
@@ -238,6 +256,18 @@ jobs:
           echo "- Repo: ${GITHUB_REPOSITORY}" >> codex-prompt.md
           echo "- Run URL: https://github.com/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}" >> codex-prompt.md
           echo "- Verity Project ID: ${{ steps.cfg.outputs.project_id }}" >> codex-prompt.md
+          if [ -n "${TARGET_REPOSITORY:-}" ]; then
+            echo "- Target repository: ${TARGET_REPOSITORY}" >> codex-prompt.md
+          fi
+          if [ -n "${TENANT_PATH:-}" ]; then
+            echo "- Tenant path scope: ${TENANT_PATH}" >> codex-prompt.md
+          fi
+          if [ -n "${ALLOWED_WRITE_GLOBS:-}" ]; then
+            echo "- Allowed write globs: ${ALLOWED_WRITE_GLOBS}" >> codex-prompt.md
+          fi
+          if [ -n "${SCOPE_POLICY_MODE:-}" ]; then
+            echo "- Scope policy mode: ${SCOPE_POLICY_MODE}" >> codex-prompt.md
+          fi
           if [ -n "${USER_REQUEST:-}" ]; then
             echo "" >> codex-prompt.md
             echo "## User request" >> codex-prompt.md
@@ -250,6 +280,14 @@ jobs:
             echo "" >> codex-prompt.md
             cat issue_context.md >> codex-prompt.md
           fi
+
+      - name: Install Playwright browsers (before Codex drops sudo)
+        continue-on-error: true
+        id: pw_install
+        if: ${{ steps.layout.outputs.monorepo_e2e == 'true' }}
+        run: |
+          sudo npx playwright install-deps chromium
+          cd frontend && npx playwright install chromium
 
       - name: Run Codex (workspace edits allowed)
         id: run_codex
@@ -268,8 +306,6 @@ jobs:
       - name: Sync docs context (auto document mode)
         if: ${{ steps.cfg.outputs.docs_auto_mode == 'true' }}
         run: python scripts/sync_repo_docs.py
-
-      # ─── UNIT TESTS (self-healing: 1 Codex retry) ───
 
       - name: Run tests pass 1 (capture errors for potential Codex fix)
         id: test_pass1
@@ -324,6 +360,7 @@ jobs:
           } > codex-test-fix-prompt.md
 
       - name: Run Codex test fix
+        id: codex_test_fix
         if: ${{ steps.test_pass1.outputs.test_failed == 'true' }}
         uses: openai/codex-action@v1
         with:
@@ -348,12 +385,11 @@ jobs:
             echo "::endgroup::"
           done <<< "${{ steps.cfg.outputs.test_cmds }}"
 
-      # ─── BUILD (self-healing: 1 Codex retry) ───
-
       - name: Install dependencies (for any modified package.json)
         if: ${{ steps.cfg.outputs.build_cmds != '' }}
         run: |
           set -euo pipefail
+          # Find ALL package.json files modified by Codex — any directory, any repo structure
           modified=$(git diff --name-only HEAD | grep -E '(^|/)package\.json$' || true)
           install_dirs=""
           if [ -n "$modified" ]; then
@@ -364,6 +400,7 @@ jobs:
               install_dirs="$install_dirs:$d:"
             done <<< "$modified"
           fi
+          # For every other JS project dir that has a lockfile, run npm ci to ensure deps are current
           while IFS= read -r lockfile; do
             d=$(dirname "$lockfile")
             if [[ ":$install_dirs:" != *":$d:"* ]]; then
@@ -409,7 +446,16 @@ jobs:
             echo "### Required process for EACH failing file:"
             echo "1. **Read the full current content** of the file first — do not rewrite from memory."
             echo "2. Apply a **minimal, surgical fix** — change only the lines causing the error."
-            echo "3. Write the fixed file using Python pathlib."
+            echo "3. Write the fixed file using Python:"
+            echo '   ```python'
+            echo "   from pathlib import Path"
+            echo '   Path("path/to/file").write_text("""<full corrected content>""", encoding="utf-8")'
+            echo '   ```'
+            echo "4. Verify the file was written and has substantial content:"
+            echo '   ```python'
+            echo '   p = Path("path/to/file")'
+            echo '   assert p.stat().st_size > 50, f"Write failed: {p}"'
+            echo '   ```'
             echo ""
             echo "### Rules:"
             echo "- Read the file BEFORE writing. Never overwrite with stale or partial content."
@@ -425,6 +471,7 @@ jobs:
           } > codex-fix-prompt.md
 
       - name: Run Codex pass 2 (fix build errors)
+        id: codex_fix
         if: ${{ steps.build_pass1.outputs.build_failed == 'true' }}
         uses: openai/codex-action@v1
         with:
@@ -475,74 +522,41 @@ jobs:
       # Runs Playwright tests against locally running servers BEFORE the PR is
       # created.  The same Codex instance that wrote the feature code can fix
       # browser-test failures with full context (up to 3 attempts).
-      # Uses detect_repo_commands.py to auto-discover server start, base URL,
-      # and e2e commands — works with any client repo structure.
       # If servers fail to start the e2e gate is skipped — not blocked.
-
-      - name: Resolve E2E commands
-        id: e2e_cfg
-        if: ${{ steps.pw_install.outcome == 'success' }}
-        continue-on-error: true
-        run: |
-          python scripts/detect_repo_commands.py --merge-config > .verity/resolved_commands.json
-          python - <<'PY'
-          import json, os
-          from pathlib import Path
-          resolved = json.loads(Path(".verity/resolved_commands.json").read_text(encoding="utf-8"))
-          e2e = resolved.get("e2e", {}) or {}
-          groups = resolved.get("test_groups", {}) or {}
-          e2e_cmds = groups.get("e2e", []) or []
-          detected = bool(e2e.get("detected"))
-          runnable = bool(e2e.get("runnable"))
-          start_cmd = str(e2e.get("start_command") or "").strip()
-          base_url = str(e2e.get("base_url") or "").strip()
-          base_url_env = str(e2e.get("base_url_env") or "PLAYWRIGHT_BASE_URL").strip()
-          e2e_cmd = e2e_cmds[0] if e2e_cmds else ""
-          with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as f:
-            f.write(f"detected={'true' if detected else 'false'}\n")
-            f.write(f"runnable={'true' if runnable else 'false'}\n")
-            f.write(f"start_command={start_cmd}\n")
-            f.write(f"base_url={base_url}\n")
-            f.write(f"base_url_env={base_url_env}\n")
-            f.write(f"e2e_command={e2e_cmd}\n")
-          PY
 
       - name: Start local servers for browser testing
         id: e2e_servers
-        if: ${{ steps.e2e_cfg.outputs.runnable == 'true' && steps.e2e_cfg.outputs.e2e_command != '' }}
+        if: ${{ steps.pw_install.outcome == 'success' }}
         continue-on-error: true
         run: |
-          set -euo pipefail
-          START_CMD="${{ steps.e2e_cfg.outputs.start_command }}"
-          BASE_URL="${{ steps.e2e_cfg.outputs.base_url }}"
-
-          if [ -z "$START_CMD" ]; then
-            echo "No start_command detected — skipping e2e"
+          # Start backend in local mode (no AWS credentials needed)
+          cd backend && LOCAL_MODE=true npm run dev > /tmp/backend.log 2>&1 &
+          # Start frontend dev server (auto-detects localhost:3001 as API in dev mode)
+          cd frontend && npx vite --host > /tmp/frontend.log 2>&1 &
+          # Wait for backend health check (up to 60s)
+          echo "Waiting for backend (localhost:3001)..."
+          for i in $(seq 1 60); do
+            curl -sf http://localhost:3001/health > /dev/null 2>&1 && echo "Backend ready." && break
+            sleep 1
+          done
+          # Wait for frontend (up to 60s)
+          echo "Waiting for frontend (localhost:5173)..."
+          for i in $(seq 1 60); do
+            curl -sf http://localhost:5173 > /dev/null 2>&1 && echo "Frontend ready." && break
+            sleep 1
+          done
+          # Final readiness check
+          if ! curl -sf http://localhost:3001/health > /dev/null 2>&1; then
+            echo "::warning::Backend failed to start — skipping e2e tests"
             echo "servers_ready=false" >> "$GITHUB_OUTPUT"
-            exit 0
+            exit 1
           fi
-
-          echo "Starting server: $START_CMD"
-          nohup bash -lc "$START_CMD" > /tmp/e2e-server.log 2>&1 &
-          echo "$!" > /tmp/e2e-server.pid
-
-          if [ -n "$BASE_URL" ]; then
-            echo "Waiting for $BASE_URL ..."
-            for i in $(seq 1 45); do
-              if curl -sS -o /dev/null -w '' --max-time 3 "$BASE_URL" 2>/dev/null; then
-                echo "Server ready at $BASE_URL"
-                echo "servers_ready=true" >> "$GITHUB_OUTPUT"
-                exit 0
-              fi
-              sleep 2
-            done
-            echo "::warning::Server failed to start at $BASE_URL — skipping e2e tests"
+          if ! curl -sf http://localhost:5173 > /dev/null 2>&1; then
+            echo "::warning::Frontend failed to start — skipping e2e tests"
             echo "servers_ready=false" >> "$GITHUB_OUTPUT"
-          else
-            # No base_url — give the server a few seconds then assume ready
-            sleep 5
-            echo "servers_ready=true" >> "$GITHUB_OUTPUT"
+            exit 1
           fi
+          echo "servers_ready=true" >> "$GITHUB_OUTPUT"
 
       # --- Browser test pass 1 ---
       - name: Run browser tests (pass 1)
@@ -550,14 +564,15 @@ jobs:
         if: ${{ steps.e2e_servers.outputs.servers_ready == 'true' }}
         continue-on-error: true
         env:
+          PLAYWRIGHT_BASE_URL: http://localhost:5173
           VERITY_E2E_EMAIL: ${{ secrets.VERITY_E2E_EMAIL }}
           VERITY_E2E_PASSWORD: ${{ secrets.VERITY_E2E_PASSWORD }}
-          VERITY_API_BASE: ${{ steps.e2e_cfg.outputs.base_url }}
+          VERITY_API_BASE: http://localhost:3001
         run: |
-          export ${{ steps.e2e_cfg.outputs.base_url_env }}="${{ steps.e2e_cfg.outputs.base_url }}"
-          E2E_CMD="${{ steps.e2e_cfg.outputs.e2e_command }}"
-          bash -lc "$E2E_CMD" 2>&1 | tee e2e-error.txt
+          set +e
+          cd frontend && npx playwright test 2>&1 | tee ../e2e-error.txt
           e2e_exit=${PIPESTATUS[0]}
+          set -e
           if [ "$e2e_exit" -ne 0 ]; then
             echo "e2e_failed=true" >> "$GITHUB_OUTPUT"
             exit 1
@@ -568,21 +583,23 @@ jobs:
       - name: Prepare Codex e2e fix prompt (attempt 1)
         if: ${{ steps.e2e_pass1.outputs.e2e_failed == 'true' }}
         run: |
-          set -euo pipefail
           {
             echo "## Codex Browser Test Fix (Attempt 1 of 3)"
             echo ""
             echo "Playwright browser tests failed against the locally running app."
-            echo "Fix the source code or the test file so the tests pass."
+            echo "Backend: http://localhost:3001 | Frontend: http://localhost:5173"
             echo ""
-            echo "### Rules:"
-            echo "- Read files BEFORE writing. Never overwrite with stale content."
-            echo "- Prefer fixing the source code over weakening the test."
-            echo "- If the test has a wrong selector or outdated assertion, fix the test."
+            echo "### Required process:"
+            echo "1. **Read the failing source file** BEFORE writing any fix."
+            echo "2. Apply a **minimal, surgical fix** — change only what causes the failure."
+            echo "3. Write files using Python pathlib (see dev-cycle prompt for the pattern)."
+            echo "4. Fix the **source code** unless the test itself has a bug."
+            echo "5. Do NOT add new features or refactor unrelated code."
             echo ""
             echo "## Playwright error output"
-            echo ""
+            echo '```'
             cat e2e-error.txt
+            echo '```'
           } > codex-e2e-fix-prompt.md
 
       - name: Run Codex e2e fix (attempt 1)
@@ -605,14 +622,15 @@ jobs:
         if: ${{ steps.e2e_pass1.outputs.e2e_failed == 'true' }}
         continue-on-error: true
         env:
+          PLAYWRIGHT_BASE_URL: http://localhost:5173
           VERITY_E2E_EMAIL: ${{ secrets.VERITY_E2E_EMAIL }}
           VERITY_E2E_PASSWORD: ${{ secrets.VERITY_E2E_PASSWORD }}
-          VERITY_API_BASE: ${{ steps.e2e_cfg.outputs.base_url }}
+          VERITY_API_BASE: http://localhost:3001
         run: |
-          export ${{ steps.e2e_cfg.outputs.base_url_env }}="${{ steps.e2e_cfg.outputs.base_url }}"
-          E2E_CMD="${{ steps.e2e_cfg.outputs.e2e_command }}"
-          bash -lc "$E2E_CMD" 2>&1 | tee e2e-error.txt
+          set +e
+          cd frontend && npx playwright test 2>&1 | tee ../e2e-error.txt
           e2e_exit=${PIPESTATUS[0]}
+          set -e
           if [ "$e2e_exit" -ne 0 ]; then
             echo "e2e_failed=true" >> "$GITHUB_OUTPUT"
             exit 1
@@ -623,21 +641,24 @@ jobs:
       - name: Prepare Codex e2e fix prompt (attempt 2)
         if: ${{ steps.e2e_pass2.outputs.e2e_failed == 'true' }}
         run: |
-          set -euo pipefail
           {
             echo "## Codex Browser Test Fix (Attempt 2 of 3)"
             echo ""
             echo "Playwright browser tests STILL failing after first fix attempt."
-            echo "Read the error carefully. The previous fix may have been incomplete or wrong."
+            echo "The issue may be DIFFERENT from the first failure."
+            echo "Backend: http://localhost:3001 | Frontend: http://localhost:5173"
             echo ""
-            echo "### Rules:"
-            echo "- Read files BEFORE writing."
-            echo "- Try a different approach than the first attempt."
-            echo "- Check if the app actually renders the expected content."
+            echo "### Required process:"
+            echo "1. **Read the failing source file** BEFORE writing any fix."
+            echo "2. Apply a **minimal, surgical fix** — change only what causes the failure."
+            echo "3. Write files using Python pathlib (see dev-cycle prompt for the pattern)."
+            echo "4. Fix the **source code** unless the test itself has a bug."
+            echo "5. Do NOT add new features or refactor unrelated code."
             echo ""
             echo "## Playwright error output"
-            echo ""
+            echo '```'
             cat e2e-error.txt
+            echo '```'
           } > codex-e2e-fix-prompt.md
 
       - name: Run Codex e2e fix (attempt 2)
@@ -660,14 +681,15 @@ jobs:
         if: ${{ steps.e2e_pass2.outputs.e2e_failed == 'true' }}
         continue-on-error: true
         env:
+          PLAYWRIGHT_BASE_URL: http://localhost:5173
           VERITY_E2E_EMAIL: ${{ secrets.VERITY_E2E_EMAIL }}
           VERITY_E2E_PASSWORD: ${{ secrets.VERITY_E2E_PASSWORD }}
-          VERITY_API_BASE: ${{ steps.e2e_cfg.outputs.base_url }}
+          VERITY_API_BASE: http://localhost:3001
         run: |
-          export ${{ steps.e2e_cfg.outputs.base_url_env }}="${{ steps.e2e_cfg.outputs.base_url }}"
-          E2E_CMD="${{ steps.e2e_cfg.outputs.e2e_command }}"
-          bash -lc "$E2E_CMD" 2>&1 | tee e2e-error.txt
+          set +e
+          cd frontend && npx playwright test 2>&1 | tee ../e2e-error.txt
           e2e_exit=${PIPESTATUS[0]}
+          set -e
           if [ "$e2e_exit" -ne 0 ]; then
             echo "e2e_failed=true" >> "$GITHUB_OUTPUT"
             exit 1
@@ -680,7 +702,7 @@ jobs:
         id: e2e_final
         if: always()
         run: |
-          if [ "${{ steps.e2e_cfg.outputs.runnable }}" != "true" ] || [ "${{ steps.e2e_servers.outputs.servers_ready }}" != "true" ]; then
+          if [ "${{ steps.e2e_servers.outputs.servers_ready }}" != "true" ]; then
             echo "status=skipped" >> "$GITHUB_OUTPUT"
           elif [ "${{ steps.e2e_pass1.outputs.e2e_failed }}" != "true" ]; then
             echo "status=passed" >> "$GITHUB_OUTPUT"
@@ -695,15 +717,8 @@ jobs:
       - name: Stop local servers
         if: always()
         run: |
-          if [ -f /tmp/e2e-server.pid ]; then
-            kill "$(cat /tmp/e2e-server.pid)" 2>/dev/null || true
-          fi
-          # Fallback: kill common dev server processes
-          pkill -f "next dev" 2>/dev/null || true
-          pkill -f "ts-node-dev" 2>/dev/null || true
-          pkill -f "vite" 2>/dev/null || true
-          pkill -f "webpack-dev-server" 2>/dev/null || true
-          pkill -f "nodemon" 2>/dev/null || true
+          pkill -f "ts-node-dev" || true
+          pkill -f "vite" || true
 
       # ─── END LAYER 1 ───
 
@@ -712,28 +727,24 @@ jobs:
         id: e2e_specs
         if: ${{ steps.e2e_final.outputs.status == 'passed' }}
         run: |
-          specs_json=$(python3 - <<'PY'
-          import json, glob
+          # Find all .spec.ts files under frontend/e2e/ that Codex created or modified
+          specs_json="[]"
+          if [ -d "frontend/e2e" ]; then
+            specs_json=$(python3 - <<'PY'
+          import json, os, glob
           specs = []
-          for pattern in ["**/e2e/**/*.spec.ts", "**/e2e/**/*.spec.js", "**/tests/e2e/**/*.spec.ts"]:
-            for path in sorted(glob.glob(pattern, recursive=True)):
-              if "node_modules" in path:
-                continue
-              try:
-                content = open(path, encoding="utf-8").read()
-                if len(content.strip()) > 50:
-                  specs.append({"path": path, "content": content[:50000]})
-              except Exception:
-                pass
-          seen = set()
-          unique = []
-          for s in specs:
-            if s["path"] not in seen:
-              seen.add(s["path"])
-              unique.append(s)
-          print(json.dumps(unique))
+          for path in sorted(glob.glob("frontend/e2e/**/*.spec.ts", recursive=True)):
+            try:
+              content = open(path, encoding="utf-8").read()
+              if len(content.strip()) > 50:  # skip near-empty files
+                specs.append({"path": path, "content": content[:50000]})  # cap per file
+            except Exception:
+              pass
+          print(json.dumps(specs))
           PY
-          )
+            )
+          fi
+          # Save to a file for the callback step to read
           echo "$specs_json" > /tmp/e2e-spec-files.json
           count=$(echo "$specs_json" | python3 -c "import json,sys; print(len(json.load(sys.stdin)))")
           echo "count=$count" >> "$GITHUB_OUTPUT"
@@ -749,6 +760,8 @@ jobs:
             codex-output.md
             codex-fix-prompt.md
             codex-fix-output.md
+            codex-conflict-prompt.md
+            codex-conflict-output.md
             codex-test-fix-prompt.md
             codex-test-fix-output.md
             codex-e2e-fix-prompt.md
@@ -758,21 +771,111 @@ jobs:
             test-error.txt
             e2e-error.txt
             issue_context.md
-            .verity/resolved_commands.json
           if-no-files-found: ignore
 
       - name: Clean generated artifacts before PR
         run: |
           set -euo pipefail
+
+          # Remove common local artifacts created during Codex/test/build execution.
           find . -type d -name '__pycache__' -prune -exec rm -rf {} +
           find . -type f -name '*.pyc' -delete
           rm -f codex-prompt.md codex-output.md codex-fix-prompt.md codex-fix-output.md \
+                codex-conflict-prompt.md codex-conflict-output.md build-error.txt \
                 codex-test-fix-prompt.md codex-test-fix-output.md \
                 codex-e2e-fix-prompt.md codex-e2e-fix-output-1.md codex-e2e-fix-output-2.md \
-                test-error.txt e2e-error.txt build-error.txt issue_context.md pr-body.md
+                test-error.txt e2e-error.txt issue_context.md pr-body.md
           rm -rf frontend/node_modules/.vite frontend/node_modules/.vite-* frontend/.vite
-          # Restore tracked docs to avoid noisy diffs
+
+          # If these paths are tracked in this repo, restore them to avoid noisy PR diffs.
+          while IFS= read -r path; do
+            git restore --source=HEAD --staged --worktree -- "$path" || true
+          done < <(
+            git diff --name-only | grep -E '^(codex-prompt\.md|codex-output\.md|codex-fix-prompt\.md|codex-fix-output\.md|codex-conflict-prompt\.md|codex-conflict-output\.md|build-error\.txt|issue_context\.md|pr-body\.md|__pycache__/|.*\.pyc$|frontend/node_modules/\.vite($|/)|frontend/node_modules/\.vite-[^/]+/)'
+          )
+
+          # Restore auto-generated docs so they don't interfere with the docs-only guard.
+          # sync_repo_docs.py always rewrites these with the current commit SHA/timestamp;
+          # without this restore, runs where Codex produced no code changes would be blocked
+          # by the guard (docs-only detected → exit 1) even though no real fix was attempted.
           git restore --source=HEAD --staged --worktree -- docs/REPO_CONTEXT.md docs/AI_HANDOFF.md 2>/dev/null || true
+
+      - name: Sync with latest base branch (prevent stale PR base)
+        id: sync_base
+        run: |
+          set -euo pipefail
+          # Get the default branch name (more reliable than GITHUB_REF_NAME for workflow_dispatch)
+          base=$(git symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@' || echo "${GITHUB_REF_NAME}")
+          git fetch origin "${base}" --quiet
+          new_commits=$(git rev-list --count HEAD..origin/${base} 2>/dev/null || echo "0")
+          if [ "$new_commits" = "0" ]; then
+            echo "Base branch is up to date."
+            echo "conflicts=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          echo "Base branch has $new_commits new commit(s) since checkout — syncing."
+          # Stage all Codex working-tree changes before stashing (includes new/untracked files)
+          git add -A
+          stash_label="verity-codex-wip"
+          git stash push -m "$stash_label" 2>&1 || true
+          stashed=$(git stash list | grep -c "$stash_label" || echo "0")
+          # Fast-forward HEAD to latest base
+          git reset --hard "origin/${base}"
+          # Re-apply Codex changes on top of the updated base
+          if [ "$stashed" != "0" ]; then
+            if git stash pop 2>&1; then
+              echo "Stash applied cleanly — no conflicts."
+              echo "conflicts=false" >> "$GITHUB_OUTPUT"
+            else
+              echo "Conflicts detected when applying Codex changes onto updated base."
+              conflict_files=$(git diff --name-only --diff-filter=U || true)
+              echo "conflicts=true" >> "$GITHUB_OUTPUT"
+              printf 'conflict_files<<EOF\n%s\nEOF\n' "$conflict_files" >> "$GITHUB_OUTPUT"
+            fi
+          else
+            echo "No working-tree changes to restore."
+            echo "conflicts=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Prepare Codex conflict-resolution prompt
+        if: ${{ steps.sync_base.outputs.conflicts == 'true' }}
+        env:
+          CONFLICT_FILES: ${{ steps.sync_base.outputs.conflict_files }}
+        run: |
+          set -euo pipefail
+          {
+            echo "## Codex Conflict Resolution Pass"
+            echo ""
+            echo "Your previous changes conflicted with the latest base branch after syncing."
+            echo "The following files have conflict markers (\`<<<<<<<\`, \`=======\`, \`>>>>>>>\`):"
+            echo ""
+            printf '%s\n' "${CONFLICT_FILES}" | while IFS= read -r f; do
+              [ -n "$f" ] && echo "- $f"
+            done
+            echo ""
+            echo "For each conflicted file:"
+            echo "1. Read the file to see the conflict markers."
+            echo "2. Resolve by keeping BOTH the base changes AND your original intent."
+            echo "3. Write the resolved file using Python pathlib.Path.write_text() — no conflict markers in the final output."
+            echo "4. Verify the file has no remaining \`<<<<<<<\` markers."
+            echo ""
+            echo "Do NOT commit. Leave resolved files in the working tree."
+          } > codex-conflict-prompt.md
+
+      - name: Run Codex pass 3 (resolve conflicts)
+        id: codex_conflict
+        if: ${{ steps.sync_base.outputs.conflicts == 'true' }}
+        uses: openai/codex-action@v1
+        with:
+          openai-api-key: ${{ secrets.OPENAI_API_KEY }}
+          model: ${{ vars.VERITY_CODEX_MODEL != '' && vars.VERITY_CODEX_MODEL || 'gpt-5' }}
+          prompt-file: codex-conflict-prompt.md
+          output-file: codex-conflict-output.md
+          safety-strategy: drop-sudo
+          sandbox: workspace-write
+          allow-bots: true
+          allow-bot-users: ${{ vars.VERITY_CODEX_ALLOW_BOT_USERS }}
+          codex-args: '["--full-auto"]'
 
       - name: Guard against docs-only PRs
         env:
@@ -784,46 +887,118 @@ jobs:
             echo "No changes detected; skipping docs-only guard."
             exit 0
           fi
+
           non_docs="$(
             printf '%s\n' "$changed_files" | grep -Ev '(^docs/|^README\.md$|^CHANGELOG\.md$|^LICENSE$|^AGENTS\.md$|^\.github/codex/prompts/|^\.github/codex/schemas/|\.md$)' || true
           )"
+
           if [ -n "$non_docs" ]; then
             echo "Non-doc changes detected; continuing."
             exit 0
           fi
+
           if [ "${ALLOW_DOCS_ONLY_PR}" = "true" ]; then
             echo "Only docs changed, but allow_docs_only_pr=true so continuing."
             exit 0
           fi
+
           echo "Docs-only change set detected. Set allow_docs_only_pr=true for documentation-only runs." >&2
           exit 1
+
+      - name: Guard tenant write scope
+        env:
+          TENANT_PATH: ${{ inputs.tenant_path }}
+          ALLOWED_WRITE_GLOBS: ${{ inputs.allowed_write_globs }}
+          SCOPE_POLICY_MODE: ${{ inputs.scope_policy_mode }}
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import fnmatch
+          import os
+          import subprocess
+          import sys
+
+          mode = (os.environ.get("SCOPE_POLICY_MODE") or "").strip().lower()
+          tenant_path = (os.environ.get("TENANT_PATH") or "").strip().replace("\\", "/")
+          globs = [entry.strip() for entry in (os.environ.get("ALLOWED_WRITE_GLOBS") or "").split(",") if entry.strip()]
+          changed = subprocess.check_output(["git", "diff", "--name-only", "HEAD"], text=True).splitlines()
+          changed = [entry.strip().replace("\\", "/") for entry in changed if entry.strip()]
+          if not changed:
+            sys.exit(0)
+
+          if not tenant_path and not globs:
+            if mode == "enforce":
+              print("Scope enforcement enabled but no tenant_path/allowed_write_globs supplied.", file=sys.stderr)
+              sys.exit(1)
+            print("No tenant write scope supplied; skipping scope guard.")
+            sys.exit(0)
+
+          def allowed(path: str) -> bool:
+            if tenant_path and path.startswith(tenant_path):
+              return True
+            return any(fnmatch.fnmatch(path, pattern) for pattern in globs)
+
+          violations = [path for path in changed if not allowed(path)]
+          if not violations:
+            print("Tenant write scope validation passed.")
+            sys.exit(0)
+
+          if mode == "enforce":
+            print("Tenant write scope validation failed. Out-of-scope files:", file=sys.stderr)
+            for path in violations:
+              print(f"- {path}", file=sys.stderr)
+            sys.exit(1)
+
+          print("Tenant write scope warnings:")
+          for path in violations:
+            print(f"- {path}")
+          PY
 
       - name: Prepare PR body
         env:
           CODEX_SUMMARY: ${{ steps.run_codex.outputs.final-message }}
+          CONFLICTS: ${{ steps.sync_base.outputs.conflicts }}
           E2E_STATUS: ${{ steps.e2e_final.outputs.status }}
+          RUN_URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          ISSUE_NUMBER: ${{ inputs.issue_number }}
         run: |
           set -euo pipefail
+          # Create pr-body.md in workspace root (same directory as this workflow file)
+          # The peter-evans/create-pull-request action will find it via body-file: pr-body.md
           {
             echo "This PR was created automatically by Verity/Codex."
             echo ""
-            echo "- Workflow run: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-            echo "- Issue: ${{ inputs.issue_number }}"
-            echo ""
-            echo "## Browser test status"
-            echo ""
-            if [ "${E2E_STATUS}" = "failed" ]; then
-              echo "> **Browser tests failed**: Playwright e2e tests did not pass after 3 Codex fix attempts. Please review the e2e failures in the workflow artifacts."
-            elif [ "${E2E_STATUS}" = "passed" ]; then
-              echo "> **Browser tests passed**: Playwright e2e tests passed successfully."
-            elif [ "${E2E_STATUS}" = "skipped" ]; then
-              echo "> **Browser tests skipped**: Local servers could not start or Playwright was not available."
-            fi
+            echo "- Workflow run: ${RUN_URL}"
+            echo "- Issue: ${ISSUE_NUMBER}"
+          } > pr-body.md
+          if [ "${CONFLICTS}" = "true" ]; then
+            {
+              echo ""
+              echo "> ⚠️ **Conflict warning**: This PR was rebased onto a newer base commit. Codex attempted to resolve merge conflicts automatically — please review the diff carefully."
+            } >> pr-body.md
+          fi
+          if [ "${E2E_STATUS}" = "failed" ]; then
+            {
+              echo ""
+              echo "> ⚠️ **Browser tests failed**: Playwright e2e tests did not pass after 3 Codex fix attempts. Please review the e2e failures in the workflow artifacts."
+            } >> pr-body.md
+          elif [ "${E2E_STATUS}" = "passed" ]; then
+            {
+              echo ""
+              echo "> ✅ **Browser tests passed**: Playwright e2e tests passed successfully."
+            } >> pr-body.md
+          elif [ "${E2E_STATUS}" = "skipped" ]; then
+            {
+              echo ""
+              echo "> ℹ️ **Browser tests skipped**: Local servers could not start or Playwright was not available."
+            } >> pr-body.md
+          fi
+          {
             echo ""
             echo "## Codex summary"
             echo ""
             printf '%s\n' "${CODEX_SUMMARY}"
-          } > pr-body.md
+          } >> pr-body.md
 
       - name: Create PR with changes
         id: cpr
@@ -831,10 +1006,10 @@ jobs:
         with:
           token: ${{ steps.gh_write_token.outputs.token || secrets.VERITY_GITHUB_WRITE_TOKEN || github.token }}
           commit-message: "chore(verity): codex dev-cycle changes"
-          branch: ${{ inputs.branch_name != '' && inputs.branch_name || format('verity/codex-dev-cycle-{0}', github.run_id) }}
+          branch: verity/codex-dev-cycle-${{ github.run_id }}
           delete-branch: true
-          title: ${{ inputs.pr_title != '' && inputs.pr_title || (inputs.issue_number != '' && inputs.issue_number != '0' && format('Verity fix for issue #{0}', inputs.issue_number) || format('Verity Codex dev-cycle (run {0})', github.run_id)) }}
-          body-file: pr-body.md
+          title: ${{ inputs.pr_title != '' && inputs.pr_title || format('Verity Codex dev-cycle (run {0})', github.run_id) }}
+          body-file: pr-body.md  # File created in workspace root by "Prepare PR body" step
           labels: ${{ steps.e2e_final.outputs.status == 'failed' && format('{0},verity:e2e-failed', inputs.pr_labels) || inputs.pr_labels }}
           draft: ${{ inputs.pr_draft == 'true' }}
 
@@ -863,9 +1038,11 @@ jobs:
           GH_TOKEN: ${{ steps.gh_write_token.outputs.token || secrets.VERITY_GITHUB_WRITE_TOKEN || github.token }}
           PR_NUMBER: ${{ steps.cpr.outputs.pull-request-number }}
         run: |
+          # Enable auto-merge so the PR merges automatically once all required checks pass.
+          # Falls back to merge commit if squash is not allowed on this repo.
           gh pr merge --auto --squash "$PR_NUMBER" 2>/dev/null || \
           gh pr merge --auto --merge "$PR_NUMBER" 2>/dev/null || \
-          echo "auto-merge not available on this repository"
+          echo "auto-merge not available on this repository (branch protection rules may need to allow it)"
 
       - name: Notify Verity - completed
         if: always()
@@ -883,10 +1060,6 @@ jobs:
           E2E_SPECS_COUNT: ${{ steps.e2e_specs.outputs.count || '0' }}
           ISSUE_NUMBER: ${{ inputs.issue_number }}
         run: |
-          if [ -z "$VERITY_CALLBACK_URL" ] || [ "$VERITY_CALLBACK_URL" = "https://8453-124-29-214-31.ngrok-free.app/api/callbacks/github-actions" ]; then
-            echo "Skipping callback: callback URL not configured"
-            exit 0
-          fi
           python - <<'PY' > /tmp/verity-callback.json
           import json, os, pathlib
           payload = {
@@ -906,6 +1079,7 @@ jobs:
             "issue_number": os.environ.get("ISSUE_NUMBER") or None,
             "run_correlation_id": f"{os.environ.get('GITHUB_WORKFLOW')}:{os.environ.get('GITHUB_RUN_ID')}:{os.environ.get('GITHUB_RUN_ATTEMPT')}"
           }
+          # Include passing E2E spec files for automatic test case capture
           specs_count = int(os.environ.get("E2E_SPECS_COUNT") or "0")
           specs_path = pathlib.Path("/tmp/e2e-spec-files.json")
           if specs_count > 0 and specs_path.exists():
