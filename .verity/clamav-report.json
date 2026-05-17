@@ -1,0 +1,22 @@
+{
+  "scanner": "missing",
+  "skipped": true,
+  "infected_count": 0,
+  "infected": [],
+  "paths": [
+    "."
+  ],
+  "excludes": [
+    "node_modules",
+    ".git",
+    ".next",
+    "dist",
+    "build",
+    ".cache",
+    ".turbo",
+    ".vercel",
+    ".pnpm-store",
+    ".pnpm"
+  ],
+  "error": "clamav_not_installed"
+}
