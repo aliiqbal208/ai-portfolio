@@ -1,0 +1,3 @@
+[e2e] Starting target: pnpm run dev -- --hostname 0.0.0.0
+/bin/bash: line 1: pnpm: command not found
+[e2e] Timed out waiting for http://127.0.0.1:3000
