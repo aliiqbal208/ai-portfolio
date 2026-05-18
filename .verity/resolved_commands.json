@@ -1,0 +1,46 @@
+{
+  "detected_at": 1779064839,
+  "setup": [
+    "pnpm install --frozen-lockfile"
+  ],
+  "test": [],
+  "build": [
+    "pnpm run build"
+  ],
+  "deploy": [],
+  "test_groups": {
+    "unit": [],
+    "integration": [],
+    "e2e": []
+  },
+  "risk": {
+    "level": "full",
+    "requires_full_suite": false
+  },
+  "e2e": {
+    "detected": false,
+    "runnable": false,
+    "command": [],
+    "start_command": "",
+    "base_url": "",
+    "base_url_env": "PLAYWRIGHT_BASE_URL",
+    "required_env": [],
+    "missing_env": [],
+    "reason": "not_detected",
+    "project_path": ""
+  },
+  "auto_fix": {
+    "enabled": true,
+    "max_attempts": 3,
+    "post_merge_validation": true,
+    "pr_triggers": [
+      "opened",
+      "synchronize",
+      "reopened"
+    ]
+  },
+  "notes": [
+    "Detected Next.js project at ..",
+    "No runnable test commands detected. Configure .verity/config.yml manually."
+  ]
+}
