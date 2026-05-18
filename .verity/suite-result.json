@@ -1,0 +1,49 @@
+{
+  "success": false,
+  "phase": "build",
+  "failed_command": "pnpm run build",
+  "fixable": true,
+  "failure_category": "code",
+  "failure_reason": "test_failure",
+  "stop_reason": "test_failure",
+  "e2e": {
+    "detected": true,
+    "runnable": false,
+    "command": [
+      "pnpm run test:e2e"
+    ],
+    "start_command": "pnpm run dev -- --hostname 0.0.0.0",
+    "base_url": "http://127.0.0.1:3000",
+    "base_url_env": "PLAYWRIGHT_BASE_URL",
+    "required_env": [
+      "VERITY_E2E_EMAIL",
+      "VERITY_E2E_PASSWORD"
+    ],
+    "missing_env": [
+      "VERITY_E2E_EMAIL",
+      "VERITY_E2E_PASSWORD"
+    ],
+    "reason": "missing_env",
+    "project_path": "."
+  },
+  "commands": {
+    "unit": [],
+    "integration": [],
+    "e2e": [
+      "pnpm run test:e2e"
+    ]
+  },
+  "groups_run": {
+    "unit": [],
+    "integration": [],
+    "e2e": [],
+    "build": [
+      "pnpm run build"
+    ]
+  },
+  "groups_skipped": {
+    "unit": "not_configured",
+    "integration": "not_configured",
+    "e2e": "missing_env"
+  }
+}
