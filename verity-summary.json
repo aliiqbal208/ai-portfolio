@@ -1,0 +1,16 @@
+{
+  "phase": "summary",
+  "groups_run": {
+    "unit": [],
+    "integration": [],
+    "e2e": [],
+    "build": []
+  },
+  "groups_skipped": {
+    "e2e": "missing_env"
+  },
+  "notes": [
+    "Detected Next.js project at ..",
+    "No runnable test commands detected. Configure .verity/config.yml manually."
+  ]
+}
