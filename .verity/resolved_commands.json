@@ -1,0 +1,59 @@
+{
+  "detected_at": 1779091517,
+  "setup": [
+    "npm ci"
+  ],
+  "test": [
+    "npm test"
+  ],
+  "build": [
+    "npm run build"
+  ],
+  "deploy": [],
+  "test_groups": {
+    "unit": [
+      "npm test"
+    ],
+    "integration": [],
+    "e2e": [
+      "pnpm exec playwright test"
+    ]
+  },
+  "risk": {
+    "level": "standard",
+    "requires_full_suite": true
+  },
+  "e2e": {
+    "detected": true,
+    "runnable": false,
+    "command": [
+      "pnpm exec playwright test"
+    ],
+    "start_command": "pnpm run dev -- --hostname 0.0.0.0",
+    "base_url": "http://127.0.0.1:3000",
+    "base_url_env": "PLAYWRIGHT_BASE_URL",
+    "required_env": [
+      "VERITY_E2E_EMAIL",
+      "VERITY_E2E_PASSWORD"
+    ],
+    "missing_env": [
+      "VERITY_E2E_EMAIL",
+      "VERITY_E2E_PASSWORD"
+    ],
+    "reason": "disabled",
+    "project_path": "."
+  },
+  "auto_fix": {
+    "enabled": true,
+    "max_attempts": 3,
+    "post_merge_validation": true,
+    "pr_triggers": [
+      "opened",
+      "synchronize",
+      "reopened"
+    ]
+  },
+  "notes": [
+    "Detected Next.js project at .."
+  ]
+}
