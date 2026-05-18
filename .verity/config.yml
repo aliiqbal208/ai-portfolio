@@ -11,7 +11,8 @@ commands:
   build: []
   deploy: []
   test_groups:
-    unit: []
+    unit:
+      - python -m unittest discover -s tests -p test_*.py -v
     integration: []
     e2e: []
 
