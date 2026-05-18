@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "start:e2e": "next dev --hostname 0.0.0.0 -p 3000"
   },
   "dependencies": {
     "@ai-sdk/openai": "^1.2.7",
