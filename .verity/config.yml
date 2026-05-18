@@ -13,7 +13,9 @@ commands:
   test_groups:
     unit: []
     integration: []
-    e2e: []
+    e2e: [
+      "pnpm exec playwright test"
+    ]
 
 automation:
   test_auto_fix:
