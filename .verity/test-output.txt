@@ -1,0 +1,4 @@
+=== RUN: pnpm test
+/bin/bash: line 1: pnpm: command not found
+=== EXIT: 127
+
