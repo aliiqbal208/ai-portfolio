@@ -1,0 +1,17 @@
+=== RUN: python -m unittest discover -s tests -p test_*.py -v
+test_clamscan_clean (test_clamav_scanner.TestClamAVScanner.test_clamscan_clean) ... ok
+test_clamscan_infected (test_clamav_scanner.TestClamAVScanner.test_clamscan_infected) ... ok
+test_no_engine (test_clamav_scanner.TestClamAVScanner.test_no_engine) ... ok
+test_timeout (test_clamav_scanner.TestClamAVScanner.test_timeout) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.002s
+
+OK
+=== EXIT: 0
+
+[e2e] Skipped: missing_env
+=== RUN: pnpm run build
+/bin/bash: line 1: pnpm: command not found
+=== EXIT: 127
+
