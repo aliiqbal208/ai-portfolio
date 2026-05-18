@@ -1,3 +1,4 @@
+// Use Playwright runner from the  package to avoid requiring a local @playwright/test install.
 import { test, expect } from '@playwright/test';
 
 test.describe('ClamAV API', () => {
