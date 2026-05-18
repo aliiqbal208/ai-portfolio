@@ -1,0 +1,10 @@
+{
+  "engine": {
+    "engine": "none",
+    "binary": null,
+    "version": null
+  },
+  "status": "no_engine",
+  "infected": false,
+  "hits": []
+}
