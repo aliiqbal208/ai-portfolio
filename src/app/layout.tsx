@@ -5,6 +5,7 @@ import { Inter } from "next/font/google";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
 import "./globals.css";
 
 // Load Inter font for non-Apple devices
@@ -130,13 +131,15 @@ export default function RootLayout({
       >
         <ThemeProvider
           attribute="class"
-          defaultTheme="light"
-          enableSystem={false}
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
         >
           <main className="flex min-h-screen flex-col">
             {children}
           </main>
           <Toaster />
+          <ThemeToggle />
         </ThemeProvider>
         <Analytics />
         <SpeedInsights />
