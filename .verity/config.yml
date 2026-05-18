@@ -6,14 +6,17 @@ verity:
   max_generated_stories: 500
 
 commands:
-  setup: []
+  setup:
+    - pnpm install --frozen-lockfile
   test: []
-  build: []
+  build:
+    - pnpm run build
   deploy: []
   test_groups:
     unit: []
     integration: []
-    e2e: []
+    e2e:
+      - pnpm exec playwright test
 
 automation:
   test_auto_fix:
@@ -26,11 +29,14 @@ automation:
       - "reopened"
   e2e:
     enabled: "auto"
-    command: []
-    start_command: ""
-    base_url: ""
+    command:
+      - pnpm exec playwright test
+    start_command: "pnpm run dev -- --hostname 0.0.0.0"
+    base_url: "http://127.0.0.1:3000"
     base_url_env: "PLAYWRIGHT_BASE_URL"
-    required_env: []
+    required_env:
+      - VERITY_E2E_EMAIL
+      - VERITY_E2E_PASSWORD
 
 policies:
   pr_review:
