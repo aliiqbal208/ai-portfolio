@@ -26,14 +26,11 @@ automation:
       - "reopened"
   e2e:
     enabled: "auto"
-    command: []
-    start_command: ""
-    base_url: ""
+    command: ["pnpm exec playwright test"]
+    start_command: "pnpm run dev -- --hostname 0.0.0.0"
+    base_url: "http://127.0.0.1:3000"
     base_url_env: "PLAYWRIGHT_BASE_URL"
     required_env: []
-
-policies:
-  pr_review:
     enabled: true
     label_required: "verity:agent"
   openai_guardrail:
