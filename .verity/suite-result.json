@@ -1,0 +1,40 @@
+{
+  "success": false,
+  "phase": "e2e",
+  "failed_command": "pnpm run dev -- --hostname 0.0.0.0",
+  "fixable": false,
+  "failure_category": "environment",
+  "failure_reason": "unable to reach e2e target",
+  "stop_reason": "unable_to_reach_e2e_target",
+  "e2e": {
+    "detected": true,
+    "runnable": true,
+    "command": [
+      "pnpm run test:e2e"
+    ],
+    "start_command": "pnpm run dev -- --hostname 0.0.0.0",
+    "base_url": "http://127.0.0.1:3000",
+    "base_url_env": "PLAYWRIGHT_BASE_URL",
+    "required_env": [],
+    "missing_env": [],
+    "reason": "ready",
+    "project_path": "."
+  },
+  "commands": {
+    "unit": [],
+    "integration": [],
+    "e2e": [
+      "pnpm run test:e2e"
+    ]
+  },
+  "groups_run": {
+    "unit": [],
+    "integration": [],
+    "e2e": [],
+    "build": []
+  },
+  "groups_skipped": {
+    "unit": "not_configured",
+    "integration": "not_configured"
+  }
+}
