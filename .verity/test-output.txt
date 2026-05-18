@@ -1,0 +1,5 @@
+[e2e] Skipped: playwright prerequisites missing
+=== RUN: pnpm build
+/bin/bash: line 1: pnpm: command not found
+=== EXIT: 127
+
