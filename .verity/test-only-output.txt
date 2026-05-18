@@ -1,0 +1,8 @@
+=== RUN: npm test
+
+> portfolio.com@0.1.0 test
+> echo No tests configured && exit 0
+
+No tests configured
+=== EXIT: 0
+

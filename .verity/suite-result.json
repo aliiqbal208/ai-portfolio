@@ -1,0 +1,42 @@
+{
+  "success": false,
+  "phase": "build",
+  "failed_command": "npm run build",
+  "fixable": true,
+  "failure_category": "code",
+  "failure_reason": "test_failure",
+  "stop_reason": "test_failure",
+  "e2e": {
+    "detected": false,
+    "runnable": false,
+    "command": [],
+    "start_command": "",
+    "base_url": "",
+    "base_url_env": "PLAYWRIGHT_BASE_URL",
+    "required_env": [],
+    "missing_env": [],
+    "reason": "not_detected",
+    "project_path": ""
+  },
+  "commands": {
+    "unit": [
+      "npm test"
+    ],
+    "integration": [],
+    "e2e": []
+  },
+  "groups_run": {
+    "unit": [
+      "npm test"
+    ],
+    "integration": [],
+    "e2e": [],
+    "build": [
+      "npm run build"
+    ]
+  },
+  "groups_skipped": {
+    "integration": "not_configured",
+    "e2e": "not_detected"
+  }
+}

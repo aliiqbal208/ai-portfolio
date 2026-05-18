@@ -1,0 +1,16 @@
+=== RUN: npm test
+
+> portfolio.com@0.1.0 test
+> echo No tests configured && exit 0
+
+No tests configured
+=== EXIT: 0
+
+=== RUN: npm run build
+
+> portfolio.com@0.1.0 build
+> next build
+
+sh: 1: next: not found
+=== EXIT: 127
+
