@@ -1,0 +1,52 @@
+{
+  "detected_at": 1779072883,
+  "setup": [
+    "npm install"
+  ],
+  "test": [
+    "npx playwright test"
+  ],
+  "build": [
+    "npm run build"
+  ],
+  "deploy": [],
+  "test_groups": {
+    "unit": [],
+    "integration": [],
+    "e2e": [
+      "npx playwright test"
+    ]
+  },
+  "risk": {
+    "level": "full",
+    "requires_full_suite": false
+  },
+  "e2e": {
+    "detected": true,
+    "runnable": true,
+    "command": [
+      "npx playwright test"
+    ],
+    "start_command": "npm run dev -- --hostname 127.0.0.1",
+    "base_url": "http://127.0.0.1:3000",
+    "base_url_env": "PLAYWRIGHT_BASE_URL",
+    "required_env": [],
+    "missing_env": [],
+    "reason": "ready",
+    "project_path": ""
+  },
+  "auto_fix": {
+    "enabled": true,
+    "max_attempts": 3,
+    "post_merge_validation": true,
+    "pr_triggers": [
+      "opened",
+      "synchronize",
+      "reopened"
+    ]
+  },
+  "notes": [
+    "Detected Next.js project at ..",
+    "No runnable test commands detected. Configure .verity/config.yml manually."
+  ]
+}
